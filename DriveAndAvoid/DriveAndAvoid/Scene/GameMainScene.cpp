@@ -3,7 +3,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -24,7 +24,8 @@ void GameMainScene::Initialize()
 	ReadHighScore();
 
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
-	back_ground = LoadGraph("Resource/images/back.bmp");
+	back_ground = LoadGraph("Resource/images/background.png");
+	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
 	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
 
@@ -62,9 +63,9 @@ eSceneType GameMainScene::Update()
 	player->Update();
 
 	//ˆÚ“®‹——£‚ÌXV
-	mileage += (int)player->GetSpped() + 5;
+	mileage++;
 
-	// “G¶¬ˆ—
+	//“G¶¬ˆ—
 	if (mileage / 20 % 100 == 0)
 	{
 		for (int i = 0; i < 10; i++)
@@ -72,8 +73,7 @@ eSceneType GameMainScene::Update()
 			if (enemy[i] == nullptr)
 			{
 				int type = GetRand(3) % 3;
-				char string[] = "‚±‚ñ‚É‚¿‚Í";
-				enemy[i] = new Enemy(type, 16, 0xffffff, "‚±‚ñ‚É‚¿‚Í");
+				enemy[i] = new Enemy(type, enemy_image[type]);
 				enemy[i]->Initialize();
 				break;
 			}
@@ -100,7 +100,7 @@ eSceneType GameMainScene::Update()
 			if (IsHitCheck(player, enemy[i]))
 			{
 				player->SetActive(false);
-				player->DecreaseHP(-50.0f);
+				player->DecreaseHP(-5.0f);
 				enemy[i]->Fialize();
 				delete enemy[i];
 				enemy[i] = nullptr;
@@ -111,7 +111,7 @@ eSceneType GameMainScene::Update()
 	//ƒvƒŒƒCƒ„[‚Ì”R—¿‚ª‘Ì—Í‚ª0–¢–‚È‚çAƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
 	if (player->GetFuel() < 0.0f || player->GetHP() < 0.0f)
 	{
-		//return eSceneType::E_RESULT;
+		return eSceneType::E_RESULT;
 	}
 
 	return GetNowScene();
@@ -121,21 +121,25 @@ eSceneType GameMainScene::Update()
 void GameMainScene::Draw() const
 {
 	//”wŒi‰æ‘œ‚Ì•`‰æ
-	//DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
-	//DrawGraph(0, mileage % 480, back_ground, TRUE);
+	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
+	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
 	//“G‚Ì•`‰æ
 	for (int i = 0; i < 10; i++)
 	{
-		if (enemy[i] != nullptr) enemy[i]->Draw();
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Draw();
+		}
 	}
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
-	//player->Draw();
+	player->Draw();
 
-	////UI‚Ì•`‰æ
+	//UI‚Ì•`‰æ
+	DrawGraph(0, 0, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
-	//SetFontSize(16);
+	SetFontSize(15);
 	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ƒnƒCƒXƒRƒA");
 	//DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
 	//DrawFormatString(510, 80, GetColor(0, 0, 0), "”ğ‚¯‚½”");
@@ -165,8 +169,10 @@ void GameMainScene::Draw() const
 	////‘Ì—ÍƒQ[ƒW‚Ì•`‰æ
 	//fx = 510.0f;
 	//fy = 430.0f;
-	//DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "PLAYER_HP");
-	//DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
+	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f–œl", player->GetHP());
+	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
+	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 
 //I—¹ˆ—

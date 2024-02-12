@@ -5,13 +5,13 @@
 class Enemy
 {
 private:
-	int type;          // タイプ
-	int font_size;     // コメントのフォントサイズ
-	int font_color;    // コメントのフォントカラー
-	const char* comment;     // コメント
-	float speed;       // 移動速度
-	Vector2D location; // 位置情報
-	Vector2D box_size; // 当たり判定の大きさ
+	int type;            // タイプ
+	int font_size;       // コメントのフォントサイズ
+	int font_color;      // コメントのフォントカラー
+	const char* comment; // コメント
+	float speed;         // 移動速度
+	Vector2D location;   // 位置情報
+	Vector2D box_size;   // 当たり判定の大きさ
 
 public:
 	Enemy(int type, int font_size, int font_color, const char* string); // typeが0は移動無し
