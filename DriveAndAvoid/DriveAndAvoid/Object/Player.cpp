@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), barrier_count(0), barrier(nullptr)
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0), bullet(nullptr)
 {
 
 }
@@ -22,7 +22,7 @@ void Player::Initialize()
 	speed = 3.0f;
 	hp = 50;
 	fuel = 20000;
-	barrier_count = 3;
+	bullet_count = 3;
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/jet.png");
@@ -37,6 +37,28 @@ void Player::Initialize()
 //更新処理
 void Player::Update()
 {
+	//弾生成処理処理
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count > 0)
+	{
+		if (bullet == nullptr)
+		{
+			bullet_pos = location;
+			bullet_count--;
+			bullet = new Bullet;
+		}
+	}
+
+	//弾が生成されていたら、更新を行う
+	if (bullet != nullptr)
+	{
+		bullet->Update();
+		if (bullet->IsFinished(this->bullet_pos))
+		{
+			delete bullet;
+			bullet = nullptr;
+		}
+	}
+
 	//操作不可状態であれば、自身を回転させる
 	if (!is_active)
 	{
@@ -63,27 +85,6 @@ void Player::Update()
 		is_active = false;
 	}
 
-	//弾生成処理処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count > 0)
-	{
-		if (barrier == nullptr)
-		{
-			bullet_count--;
-			barrier = new Barrier;
-		}
-	}
-
-	//バリアが生成されていたら、更新を行う
-	if (barrier != nullptr)
-	{
-		//バリア時間が経過したか？していたら、削除する
-		if (barrier->IsFinshed(this->speed))
-		{
-			delete barrier;
-			barrier = nullptr;
-		}
-	}
-
 }
 
 //描画処理
@@ -92,10 +93,10 @@ void Player::Draw()
 	//プレイヤー画像の描画
 	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
 
-	//バリアが生成されていたら、描画を行う
-	if (barrier != nullptr)
+	//弾が生成されていたら、描画を行う
+	if (bullet != nullptr)
 	{
-		barrier->Draw(this->location);
+		bullet->Draw(this->bullet_pos);
 	}
 }
 
@@ -195,7 +196,7 @@ void Player::Movement()
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 640.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 1000.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 550.0f - box_size.y))
 	{
 		location -= move;
 	}

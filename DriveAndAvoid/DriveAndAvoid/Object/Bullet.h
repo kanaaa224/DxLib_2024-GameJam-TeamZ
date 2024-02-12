@@ -12,5 +12,7 @@ public:
 	Bullet();
 	~Bullet();
 
-	void Draw(const Vector2D& location);  //•`‰æˆ—
+	void Update();  //XVˆ—
+	void Draw(const Vector2D& location) const;  //•`‰æˆ—
+	bool IsFinished(Vector2D& pos);
 };

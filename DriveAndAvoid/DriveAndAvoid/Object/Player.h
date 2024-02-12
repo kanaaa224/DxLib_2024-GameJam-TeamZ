@@ -18,7 +18,8 @@ private:
 	int barrier_count;  //ƒoƒŠƒA‚Ì–‡”
 	Barrier* barrier;  //ƒoƒŠƒA
 	int bullet_count; //’ec”
-	Bullet bullet; //’e
+	Vector2D bullet_pos;  //’e‚Ì”­ËêŠ
+	Bullet* bullet; //’e
 
 
 public:
