@@ -66,5 +66,8 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Object\CommentManager.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

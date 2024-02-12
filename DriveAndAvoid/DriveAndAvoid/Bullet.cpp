@@ -1,7 +1,9 @@
 #include"Object/Bullet.h"
 #include"DxLib.h"
 
-Bullet::Bullet() :bullet_size(5), bullet_speed(2)
+#define SPEED 10.0f
+
+Bullet::Bullet(Vector2D location) : location(location), size(5)
 {
 
 }
@@ -13,15 +15,33 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
-	bullet_speed++;
+	location.x += SPEED;
 }
 
-void Bullet::Draw(const Vector2D& location) const
+void Bullet::Draw() const
 {
-	DrawCircle(location.x + bullet_speed, location.y, bullet_size, 0xFFFFFF, TRUE);
+	DrawCircle(location.x, location.y, size, 0xFFFFFF, TRUE);
 }
 
-bool Bullet::IsFinished(Vector2D& pos)
+Vector2D Bullet::Bullet::GetLocation()
 {
-	return ((pos.x + bullet_speed >= 1000.0f - 180.0f) || (pos.y + bullet_speed < bullet_size * 2) || (pos.y + bullet_speed >= 600.0f - bullet_size * 2));
+	return location;
+}
+
+bool Bullet::Hit(Vector2D location, Vector2D size)
+{
+	float sx1 = this->location.x - this->size;
+	float sx2 = this->location.x + this->size;
+	float sy1 = this->location.y - this->size;
+	float sy2 = this->location.y + this->size;
+
+	float dx1 = location.x;
+	float dx2 = location.x + size.x;
+	float dy1 = location.y;
+	float dy2 = location.y + size.y;
+
+	//‹éŒ`‚ªd‚È‚Á‚Ä‚¢‚ê‚Î“–‚½‚è
+	if (sx1 < dx2 && dx1 < sx2 && sy1 < dy2 && dy1 < sy2)return TRUE;
+
+	return FALSE;
 }

@@ -65,6 +65,9 @@ eSceneType GameMainScene::Update()
 	//移動距離の更新
 	mileage++;
 
+	//コメント管理（神里が追加しました）
+	comment_manager.Update(player);
+
 	//敵生成処理
 	if (mileage / 20 % 100 == 0)
 	{
@@ -99,19 +102,12 @@ eSceneType GameMainScene::Update()
 			//当たり判定の確認
 			if (IsHitCheck(player, enemy[i]))
 			{
-				player->SetActive(false);
-				player->DecreaseHP(-5.0f);
+				//player->SetActive(false);
 				enemy[i]->Fialize();
 				delete enemy[i];
 				enemy[i] = nullptr;
 			}
 		}
-	}
-
-	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHP() < 0.0f)
-	{
-		return eSceneType::E_RESULT;
 	}
 
 	return GetNowScene();
@@ -123,6 +119,9 @@ void GameMainScene::Draw() const
 	//背景画像の描画
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
+
+	//コメント描画（神里が追加しました）
+	comment_manager.Draw();
 
 	//敵の描画
 	for (int i = 0; i < 10; i++)
@@ -169,7 +168,7 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
+	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHp());
 	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
@@ -256,12 +255,18 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 		return false;
 	}
 
-	//位置情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - e->GetLocation();
+	float sx1 = p->GetLocation().x;
+	float sx2 = p->GetLocation().x + p->GetBoxSize().x;
+	float sy1 = p->GetLocation().y;
+	float sy2 = p->GetLocation().y + p->GetBoxSize().y;
 
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+	float dx1 = e->GetLocation().x;
+	float dx2 = e->GetLocation().x + e->GetBoxSize().x;
+	float dy1 = e->GetLocation().y;
+	float dy2 = e->GetLocation().y + e->GetBoxSize().y;
 
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+	//矩形が重なっていれば当たり
+	if (sx1 < dx2 && dx1 < sx2 && sy1 < dy2 && dy1 < sy2)return TRUE;
+
+	return FALSE;
 }

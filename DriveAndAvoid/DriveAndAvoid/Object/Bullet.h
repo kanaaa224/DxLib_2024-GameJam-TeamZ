@@ -5,14 +5,15 @@
 class Bullet 
 {
 private:
-	float bullet_size;  //弾のサイズ
-	float bullet_speed;  //弾の速さ
+	Vector2D location;  //位置座標
+	float size;  //当たり判定の大きさ
 
 public:
-	Bullet();
+	Bullet(Vector2D location);
 	~Bullet();
 
 	void Update();  //更新処理
-	void Draw(const Vector2D& location) const;  //描画処理
-	bool IsFinished(Vector2D& pos);
+	void Draw() const;  //描画処理
+	Vector2D GetLocation();
+	bool Hit(Vector2D location, Vector2D size);
 };
