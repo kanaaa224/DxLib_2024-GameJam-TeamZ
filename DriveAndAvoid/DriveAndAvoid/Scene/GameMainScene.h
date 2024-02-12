@@ -9,6 +9,7 @@ class GameMainScene :public SceneBase
 private:
 	int high_score;  //ハイスコア
 	int back_ground;  //背景画像
+	int gamemainscene_image; //ゲームシーン画像
 	int barrier_image;   //バリア画像
 	int mileage;   //走行距離
 	int enemy_image[3];  //敵画像
