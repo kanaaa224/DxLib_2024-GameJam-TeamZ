@@ -63,7 +63,7 @@ eSceneType GameMainScene::Update()
 	player->Update();
 
 	//ˆÚ“®‹——£‚ÌXV
-	mileage += (int)player->GetSpped() + 5;
+	mileage++;
 
 	//“G¶¬ˆ—
 	if (mileage / 20 % 100 == 0)
@@ -121,8 +121,8 @@ eSceneType GameMainScene::Update()
 void GameMainScene::Draw() const
 {
 	//”wŒi‰æ‘œ‚Ì•`‰æ
-	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
-	DrawGraph(0, mileage % 480, back_ground, TRUE);
+	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
+	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
 	//“G‚Ì•`‰æ
 	for (int i = 0; i < 10; i++)

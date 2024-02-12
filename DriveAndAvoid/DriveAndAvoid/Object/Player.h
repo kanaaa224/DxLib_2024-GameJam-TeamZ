@@ -2,6 +2,7 @@
 
 #include"../Utility/Vector2D.h"
 #include"Barrier.h"
+#include"Bullet.h"
 
 class Player
 {
@@ -16,6 +17,9 @@ private:
 	float fuel;  //燃料
 	int barrier_count;  //バリアの枚数
 	Barrier* barrier;  //バリア
+	int bullet_count; //弾残数
+	Bullet bullet; //弾
+
 
 public:
 	Player();

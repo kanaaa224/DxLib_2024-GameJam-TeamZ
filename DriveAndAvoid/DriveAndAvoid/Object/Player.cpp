@@ -25,7 +25,7 @@ void Player::Initialize()
 	barrier_count = 3;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/car1pol.bmp");
+	image = LoadGraph("Resource/images/jet.png");
 
 	//エラーチェック
 	if (image == -1)
@@ -63,12 +63,12 @@ void Player::Update()
 		is_active = false;
 	}
 
-	//バリア処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
+	//弾生成処理処理
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count > 0)
 	{
 		if (barrier == nullptr)
 		{
-			barrier_count--;
+			bullet_count--;
 			barrier = new Barrier;
 		}
 	}
@@ -83,6 +83,7 @@ void Player::Update()
 			barrier = nullptr;
 		}
 	}
+
 }
 
 //描画処理
