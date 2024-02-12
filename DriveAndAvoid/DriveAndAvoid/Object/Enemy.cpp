@@ -1,9 +1,9 @@
-#include "Enemy.h"
-#include"DxLib.h"
+ï»¿#include "Enemy.h"
+#include "DxLib.h"
 
-Enemy::Enemy(int type, int handle) :type(type), image(handle), speed(0.0f), location(0.0f), box_size(0.0f)
+Enemy::Enemy(int type, int font_size, int font_color, const char* string) : type(type), font_size(font_size), font_color(font_color), comment(string), speed(0.0f), location(0.0f), box_size(0.0f)
 {
-
+	
 }
 
 Enemy::~Enemy()
@@ -11,29 +11,29 @@ Enemy::~Enemy()
 
 }
 
-//‰Šú‰»ˆ—
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Enemy::Initialize()
 {
-	//oŒ»‚³‚¹‚éxÀ•Wƒpƒ^[ƒ“‚ğæ“¾
-	float random_x = (float)(GetRand(4) * 105 + 40);
-	//¶¬ˆÊ’u‚Ìİ’è
-	location = Vector2D(random_x, -50.0f);
-	//“–‚½‚è”»’è‚Ìİ’è
-	box_size = Vector2D(31.0f, 60.0f);
-	//‘¬‚³‚Ìİ’è
+	// é€Ÿã•ã®è¨­å®š
 	speed = (float)(this->type * 2);
+
+	// ç”Ÿæˆä½ç½®ã®è¨­å®š
+	location = Vector2D(700.0f, ((float)(GetRand(4) * 105 + 40)));
+
+	// å½“ãŸã‚Šåˆ¤å®šã®å¤§ãã•è¨­å®š
+	box_size = Vector2D(31.0f, 60.0f);
 }
 
 void Enemy::Update(float speed)
 {
-	//ˆÊ’uî•ñ‚ÉˆÚ“®—Ê‚ğ‰ÁZ‚·‚é
-	location += Vector2D(0.0f, this->speed + speed - 6);
+	location -= Vector2D(this->speed + speed, 0.0f); // ä½ç½®æƒ…å ±ã«ç§»å‹•é‡ã‚’åŠ ç®—
 }
 
 void Enemy::Draw() const
 {
-	//“G‰æ‘œ‚Ì•`‰æ
-	DrawRotaGraphF(location.x, location.y, 1.0, 0.0, image, TRUE);
+	SetFontSize(font_size);
+	DrawFormatString(location.x, location.y, font_color, comment);
 }
 
 void Enemy::Fialize()
@@ -41,19 +41,18 @@ void Enemy::Fialize()
 
 }
 
-//“G‚Ìƒ^ƒCƒv‚ğæ“¾
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int Enemy::GetType() const
 {
 	return type;
 }
 
-//ˆÊ’uî•ñ‚ğæ“¾
 Vector2D Enemy::GetLocation() const
 {
 	return location;
 }
 
-//“–‚½‚è”»’è‚Ì‘å‚«‚³‚ğæ“¾
 Vector2D Enemy::GetBoxSize() const
 {
 	return box_size;

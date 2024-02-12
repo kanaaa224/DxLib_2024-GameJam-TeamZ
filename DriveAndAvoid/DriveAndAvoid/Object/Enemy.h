@@ -1,26 +1,28 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../Utility/Vector2D.h"
 
 class Enemy
 {
 private:
-	int type;  //ƒ^ƒCƒv
-	int image;  //‰æ‘œ
-	float speed; //‘¬‚³
-	Vector2D location; //ˆÊ’uî•ñ
-	Vector2D box_size; //a“–‚½‚è”»’è‚Ì‘å‚«‚³
+	int type;          // ã‚¿ã‚¤ãƒ—
+	int font_size;     // ã‚³ãƒ¡ãƒ³ãƒˆã®ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º
+	int font_color;    // ã‚³ãƒ¡ãƒ³ãƒˆã®ãƒ•ã‚©ãƒ³ãƒˆã‚«ãƒ©ãƒ¼
+	const char* comment;     // ã‚³ãƒ¡ãƒ³ãƒˆ
+	float speed;       // ç§»å‹•é€Ÿåº¦
+	Vector2D location; // ä½ç½®æƒ…å ±
+	Vector2D box_size; // å½“ãŸã‚Šåˆ¤å®šã®å¤§ãã•
 
 public:
-	Enemy(int type, int handle);
+	Enemy(int type, int font_size, int font_color, const char* string); // typeãŒ0ã¯ç§»å‹•ç„¡ã—
 	~Enemy();
 
-	void Initialize();  //‰Šú‰»ˆ—
-	void Update(float spped);  //XVˆ—
-	void Draw() const;  //•`‰æˆ—
-	void Fialize(); //I—¹ˆ—
+	void Initialize();        // åˆæœŸåŒ–å‡¦ç†
+	void Update(float spped); // æ›´æ–°å‡¦ç†
+	void Draw() const;        // æç”»å‡¦ç†
+	void Fialize();           // çµ‚äº†æ™‚å‡¦ç†
 
-	int GetType() const;  //ƒ^ƒCƒvæ“¾
-	Vector2D GetLocation() const;  //ˆÊ’uî•ñ‚Ìæ“¾
-	Vector2D GetBoxSize() const;  //“–‚½‚è”»’è‚Ì‘å‚«‚³‚ğæ“¾
+	int GetType() const;          // ã‚¿ã‚¤ãƒ—å–å¾—
+	Vector2D GetLocation() const; // ä½ç½®æƒ…å ±ã®å–å¾—
+	Vector2D GetBoxSize() const;  // å½“ãŸã‚Šåˆ¤å®šã®å¤§ãã•ã‚’å–å¾—
 };
