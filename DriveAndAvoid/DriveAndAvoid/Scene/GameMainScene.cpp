@@ -171,6 +171,7 @@ void GameMainScene::Draw() const
 	//fy = 430.0f;
 	DrawFormatStringF(195,642, GetColor(0, 0, 0), "%.0f–œl",player->GetHP());
 	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 
