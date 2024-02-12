@@ -17,37 +17,37 @@ GameMainScene::~GameMainScene()
 
 }
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//‰Šú‰»ˆ—
 void GameMainScene::Initialize()
 {
-	//ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½lï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
+	//‚“¾“_’l‚ğ“Ç‚İ‚Ş
 	ReadHighScore();
 
-	//ï¿½æ‘œï¿½Ì“Ç‚İï¿½ï¿½ï¿½
+	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	back_ground = LoadGraph("Resource/images/background.png");
 	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
 	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
 
-	//ï¿½Gï¿½ï¿½ï¿½[ï¿½`ï¿½Fï¿½bï¿½N
+	//ƒGƒ‰[ƒ`ƒFƒbƒN
 	if (back_ground == -1)
 	{
-		throw("Resource/images/back.bmpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½\n");
+		throw("Resource/images/back.bmp‚ª‚ ‚è‚Ü‚¹‚ñ\n");
 	}
 	if (result == -1)
 	{
-		throw("Resource/images/car.bmpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½\n");
+		throw("Resource/images/car.bmp‚ª‚ ‚è‚Ü‚¹‚ñ\n");
 	}
 	if (barrier_image == -1)
 	{
-		throw("Resource/images/barrier.pngï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½\n");
+		throw("Resource/images/barrier.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
 	}
 
-	//ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½
+	//ƒIƒuƒWƒFƒNƒg‚Ì¶¬
 	player = new Player;
 	enemy = new Enemy * [10];
 
-	//ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
+	//ƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»
 	player->Initialize();
 
 	for (int i = 0; i < 10; i++)
@@ -56,16 +56,16 @@ void GameMainScene::Initialize()
 	}
 }
 
-//ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
+//XVˆ—
 eSceneType GameMainScene::Update()
 {
-	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌXï¿½V
+	//ƒvƒŒƒCƒ„[‚ÌXV
 	player->Update();
 
-	//ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌXï¿½V
+	//ˆÚ“®‹——£‚ÌXV
 	mileage++;
 
-	//ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//“G¶¬ˆ—
 	if (mileage / 20 % 100 == 0)
 	{
 		for (int i = 0; i < 10; i++)
@@ -73,21 +73,21 @@ eSceneType GameMainScene::Update()
 			if (enemy[i] == nullptr)
 			{
 				int type = GetRand(3) % 3;
-				enemy[i] = new Enemy(type, enemy_image[type]);
+				enemy[i] = new Enemy(type, 16, 0xffffff, "‚±‚ñ‚É‚¿‚Í");
 				enemy[i]->Initialize();
 				break;
 			}
 		}
 	}
 
-	//ï¿½Gï¿½ÌXï¿½Vï¿½Æ“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½`ï¿½Fï¿½bï¿½N
+	//“G‚ÌXV‚Æ“–‚½‚è”»’èƒ`ƒFƒbƒN
 	for (int i = 0; i < 10; i++)
 	{
 		if (enemy[i] != nullptr)
 		{
 			enemy[i]->Update(player->GetSpped());
 
-			//ï¿½ï¿½ÊŠOï¿½Ésï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Gï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ÄƒXï¿½Rï¿½Aï¿½ï¿½ï¿½Z
+			//‰æ–ÊŠO‚És‚Á‚½‚çA“G‚ğíœ‚µ‚ÄƒXƒRƒA‰ÁZ
 			if (enemy[i]->GetLocation().y >= 640.0f)
 			{
 				enemy_count[enemy[i]->GetType()]++;
@@ -96,7 +96,7 @@ eSceneType GameMainScene::Update()
 				enemy[i] = nullptr;
 			}
 
-			//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ÌŠmï¿½F
+			//“–‚½‚è”»’è‚ÌŠm”F
 			if (IsHitCheck(player, enemy[i]))
 			{
 				player->SetActive(false);
@@ -108,7 +108,7 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì”Rï¿½ï¿½ï¿½ï¿½ï¿½Ì—Í‚ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Aï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½gï¿½É‘Jï¿½Ú‚ï¿½ï¿½ï¿½
+	//ƒvƒŒƒCƒ„[‚Ì”R—¿‚ª‘Ì—Í‚ª0–¢–‚È‚çAƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
 	if (player->GetFuel() < 0.0f || player->GetHP() < 0.0f)
 	{
 		return eSceneType::E_RESULT;
@@ -117,14 +117,14 @@ eSceneType GameMainScene::Update()
 	return GetNowScene();
 }
 
-//ï¿½`ï¿½æˆï¿½ï¿½
+//•`‰æˆ—
 void GameMainScene::Draw() const
 {
-	//ï¿½wï¿½iï¿½æ‘œï¿½Ì•`ï¿½ï¿½
+	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
-	//ï¿½Gï¿½Ì•`ï¿½ï¿½
+	//“G‚Ì•`‰æ
 	for (int i = 0; i < 10; i++)
 	{
 		if (enemy[i] != nullptr)
@@ -133,82 +133,81 @@ void GameMainScene::Draw() const
 		}
 	}
 
-	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì•`ï¿½ï¿½
+	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	player->Draw();
 
-	//UIï¿½Ì•`ï¿½ï¿½
+	//UI‚Ì•`‰æ
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	SetFontSize(15);
-	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ï¿½nï¿½Cï¿½Xï¿½Rï¿½A");
+	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ƒnƒCƒXƒRƒA");
 	//DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
-	//DrawFormatString(510, 80, GetColor(0, 0, 0), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+	//DrawFormatString(510, 80, GetColor(0, 0, 0), "”ğ‚¯‚½”");
 	//for (int i = 0; i < 3; i++)
 	//{
 	//	DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE, FALSE);
 	//	DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d", enemy_count[i]);
 
 	//}
-	//DrawFormatString(510, 200, GetColor(0, 0, 0), "ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½");
+	//DrawFormatString(510, 200, GetColor(0, 0, 0), "‘–s‹——£");
 	//DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d", mileage / 10);
-	//DrawFormatString(510, 240, GetColor(0, 0, 0), "ï¿½Xï¿½sï¿½[ï¿½h");
+	//DrawFormatString(510, 240, GetColor(0, 0, 0), "ƒXƒs[ƒh");
 	//DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f", player->GetSpped());
 
-	////ï¿½oï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Ì•`ï¿½ï¿½
+	////ƒoƒŠƒA–‡”‚Ì•`‰æ
 	//for (int i = 0; i < player->GetBarrierCount(); i++)
 	//{
 	//	DrawRotaGraph(520 + i * 25, 340, 0.2f, 0, barrier_image, TRUE, FALSE);
 	//}
 
-	////ï¿½Rï¿½ï¿½ï¿½Qï¿½[ï¿½Wï¿½Ì•`ï¿½ï¿½
+	////”R—¿ƒQ[ƒW‚Ì•`‰æ
 	//float fx = 510.0f;
 	//float fy = 390.0f;
 	//DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "FUEL METER");
 	//DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
-	////ï¿½Ì—ÍƒQï¿½[ï¿½Wï¿½Ì•`ï¿½ï¿½
+	////‘Ì—ÍƒQ[ƒW‚Ì•`‰æ
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0fï¿½ï¿½ï¿½l", player->GetHP());
-	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0fï¿½ï¿½ï¿½l", player->GetSpped());
-	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
+	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f–œl", player->GetHP());
+	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 
-//ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//I—¹ˆ—
 void GameMainScene::Finalize()
 {
-	//ï¿½Xï¿½Rï¿½Aï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½
+	//ƒXƒRƒA‚ğŒvZ‚·‚é
 	int score = (mileage / 10 * 10);
 	for (int i = 0; i < 3; i++)
 	{
 		score += (i + 1) * 50 * enemy_count[i];
 	}
 
-	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½gï¿½fï¿½[ï¿½^ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ƒŠƒUƒ‹ƒgƒf[ƒ^‚Ì‘‚«‚İ
 	FILE* fp = nullptr;
-	//ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Iï¿½[ï¿½vï¿½ï¿½
+	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
 	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
 
-	//ï¿½Gï¿½ï¿½ï¿½[ï¿½`ï¿½Fï¿½bï¿½N
+	//ƒGƒ‰[ƒ`ƒFƒbƒN
 	if (result != 0)
 	{
-		throw("Resource/dat/result_data.csvï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½\n");
+		throw("Resource/dat/result_data.csv‚ªŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½\n");
 	}
 
-	//ï¿½Xï¿½Rï¿½Aï¿½Û‘ï¿½
+	//ƒXƒRƒA•Û‘¶
 	fprintf(fp, "%d,\n", score);
 
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ“ï¿½ï¿½_ï¿½ï¿½Û‘ï¿½
+	//”ğ‚¯‚½”‚Æ“¾“_‚ğ•Û‘¶
 	for (int i = 0; i < 3; i++)
 	{
 		fprintf(fp, "%d,\n", enemy_count[i]);
 	}
 
-	//ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½Y
+	//ƒtƒ@ƒCƒ‹ƒNƒ[ƒY
 	fclose(fp);
 
-	//ï¿½ï¿½ï¿½Iï¿½mï¿½Û‚ï¿½ï¿½ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½
+	//“®“IŠm•Û‚µ‚½ƒIƒuƒWƒFƒNƒg‚ğíœ‚·‚é
 	player->Finalize();
 	delete player;
 
@@ -225,13 +224,13 @@ void GameMainScene::Finalize()
 	delete[] enemy;
 }
 
-//ï¿½ï¿½ï¿½İ‚ÌƒVï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+//Œ»İ‚ÌƒV[ƒ“î•ñ‚ğæ“¾
 eSceneType GameMainScene::GetNowScene() const
 {
 	return eSceneType::E_MAIN;
 }
 
-//ï¿½nï¿½Cï¿½Xï¿½Rï¿½Aï¿½Ì“Ç‚İï¿½ï¿½ï¿½
+//ƒnƒCƒXƒRƒA‚Ì“Ç‚İ‚İ
 void GameMainScene::ReadHighScore()
 {
 	RankingData data;
@@ -242,27 +241,27 @@ void GameMainScene::ReadHighScore()
 	data.Finalize();
 }
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½èˆï¿½ï¿½(ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ“G)
+//“–‚½‚è”»’èˆ—(ƒvƒŒƒCƒ„[‚Æ“G)
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Aï¿½ï¿½\ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ğ–³ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ƒvƒŒƒCƒ„[‚ªƒoƒŠƒA‚ğ“\‚Á‚Ä‚¢‚½‚çA“–‚½‚è”»’è‚ğ–³‹‚·‚é
 	if (p->IsBarrier())
 	{
 		return false;
 	}
 
-	//ï¿½Gï¿½ï¿½ñ‚ª–ï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ğ–³ï¿½ï¿½ï¿½ï¿½ï¿½
+	//“Gî•ñ‚ª–³‚¯‚ê‚ÎA“–‚½‚è”»’è‚ğ–³‹‚·‚é
 	if (e == nullptr)
 	{
 		return false;
 	}
 
-	//ï¿½Ê’uï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+	//ˆÊ’uî•ñ‚Ì·•ª‚ğæ“¾
 	Vector2D diff_location = p->GetLocation() - e->GetLocation();
 
-	//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Tï¿½Cï¿½Yï¿½Ì‘å‚«ï¿½ï¿½ï¿½æ“¾
+	//“–‚½‚è”»’èƒTƒCƒY‚Ì‘å‚«‚³æ“¾
 	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
 
-	//ï¿½Rï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Ê’uï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Aï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½
+	//ƒRƒŠƒWƒ‡ƒ“ƒf[ƒ^‚æ‚èˆÊ’uî•ñ‚Ì·•ª‚ª¬‚³‚¢‚È‚çAƒqƒbƒg”»’è‚Æ‚·‚é
 	return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
