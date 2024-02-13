@@ -161,9 +161,17 @@ eSceneType GameMainScene::Update()
 				comment_count--;
 			}
 		}
+	}
+
+	for (int i = 0; i < 100; i++)
+	{
+		int k = i;
+		if (comment[i] != nullptr)
+		{
+			text[i] = comment[i]->GetComment();
+		}
 		else
 		{
-			int k = i;
 			while (comment[k] == nullptr)
 			{
 				k++;

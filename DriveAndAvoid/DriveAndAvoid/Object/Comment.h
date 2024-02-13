@@ -25,6 +25,8 @@ public:
 	int GetType() const;          // タイプ取得
 	Vector2D GetLocation() const; // 位置情報の取得
 	Vector2D GetBoxSize() const;  // 当たり判定の大きさを取得
+
+	const char* GetComment();		  //コメント内容取得
 };
 
 struct CommentData {
@@ -32,6 +34,4 @@ struct CommentData {
 	int font_size;       // コメントのフォントサイズ
 	unsigned int font_color;      // コメントのフォントカラー
 	const char* comment; // コメント
-};
-	const char *GetComment();		  //コメント内容取得
 };
