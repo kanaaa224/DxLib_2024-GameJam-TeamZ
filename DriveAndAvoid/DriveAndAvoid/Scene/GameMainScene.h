@@ -14,8 +14,14 @@ private:
 	int mileage;   //走行距離
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
+	int comment_count;	//生成したコメント数
+	const char *text[100];	//コメント表示
+	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
-	Comment** comment; //敵
+
+	Comment** comment; // 敵（コメント）
+	CommentData* commentDatas;
+	int commentDatas_num;
 
 public:
 	GameMainScene();

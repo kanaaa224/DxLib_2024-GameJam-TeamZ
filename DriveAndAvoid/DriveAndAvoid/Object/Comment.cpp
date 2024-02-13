@@ -76,3 +76,8 @@ Vector2D Comment::GetBoxSize() const
 {
 	return box_size;
 }
+
+const char *Comment::GetComment()
+{
+	return comment;
+}

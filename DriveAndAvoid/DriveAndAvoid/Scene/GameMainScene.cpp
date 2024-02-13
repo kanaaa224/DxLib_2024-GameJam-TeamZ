@@ -3,12 +3,16 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr),comment_count(0),disp_hpbar(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
+	}
+	for (int i = 0; i < 100; i++)
+	{
+		text[i] = 0;
 	}
 }
 
@@ -45,12 +49,56 @@ void GameMainScene::Initialize()
 
 	//オブジェクトの生成
 	player = new Player;
-	comment = new Comment * [100];
 
 	//オブジェクトの初期化
 	player->Initialize();
 
-	for (int i = 0; i < 100; i++)
+
+
+
+
+
+
+
+
+
+
+	commentDatas_num = 100;
+
+	/*for (int i = 0; i < 100; i++)
+	{
+		commentDatas = new CommentData;
+	}
+
+	FILE* file;
+	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
+
+	if (file_result != 0) throw("Resource/dat/comment.csv が開けませんでした。\n");
+	if (file == NULL)     throw("Resource/dat/comment.csv が開けませんでした。\n");
+
+	char str[100];
+	unsigned int font_color;
+	int font_size;
+	int type;
+
+	commentDatas_num = -1;
+
+	while (fscanf_s(file, "%[^,],%x,%d,%d\n", str, sizeof(str), &font_color, &font_size, &type) == 4) {
+		CommentData commentData;
+		commentData.comment    = str;
+		commentData.font_color = font_color;
+		commentData.font_size  = font_size;
+		commentData.type       = type;
+
+		commentDatas_num++;
+		commentDatas[commentDatas_num] = commentData;
+	}
+
+	fclose(file);*/
+
+	comment = new Comment * [commentDatas_num];
+
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		comment[i] = nullptr;
 	}
@@ -68,33 +116,37 @@ eSceneType GameMainScene::Update()
 	//敵生成処理
 	if (mileage / 20 % 100 == 0)
 	{
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < commentDatas_num; i++)
 		{
 			if (comment[i] == nullptr)
 			{
 				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
 				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
 				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				//comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
+				text[i] = comment[i]->GetComment();
 				comment[i]->Initialize();
+				comment_count++;
 				break;
 			}
 		}
 	}
 
 	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
 		{
 			comment[i]->Update(player->GetSpped());
 
 			//画面外に行ったら、敵を削除してスコア加算
-			if (comment[i]->GetLocation().y >= 640.0f)
+			if (comment[i]->GetLocation().x <= 0.0f)
 			{
 				enemy_count[comment[i]->GetType()]++;
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
+				comment_count--;
 			}
 		}
 
@@ -108,6 +160,8 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
+				disp_hpbar = 60;
+				comment_count--;
 			}
 		}
 
@@ -122,11 +176,30 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
+	for (int i = 0; i < 100; i++)
+	{
+		int k = i;
+		if (comment[i] != nullptr)
+		{
+			text[i] = comment[i]->GetComment();
+		}
+		else
+		{
+			while (comment[k] == nullptr)
+			{
+				k++;
+			}
+			if(k<100) text[i] = comment[k]->GetComment();
+		}
+	}
+
 	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHP() < 0.0f)
+	if (player->GetFuel() < 0.0f || player->GetHP() <= 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
+
+	if (disp_hpbar > 0) disp_hpbar--;
 
 	return GetNowScene();
 }
@@ -139,7 +212,7 @@ void GameMainScene::Draw() const
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
 	//敵の描画
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr) comment[i]->Draw();
 	}
@@ -147,7 +220,17 @@ void GameMainScene::Draw() const
 	//プレイヤーの描画
 	player->Draw();
 
+	
 	//UIの描画
+	if (disp_hpbar > 0)
+	{
+		Vector2D HPbar = player->GetLocation();
+		DrawBoxAA(HPbar.x - 50, HPbar.y - 30, HPbar.x + 50, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
+		for (int i = 0; i < player->GetHP(); i++)
+		{
+			DrawBoxAA(HPbar.x - (48 - i * 2), HPbar.y - 28, HPbar.x - (45 - i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
+		}
+	}
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	SetFontSize(15);
@@ -180,8 +263,19 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
-	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
+	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
+	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
+	for (int i = 0; i < comment_count ; i++)
+	{
+			if (140 + (i * 65) <= 600)
+			{
+				DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+				DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff2510, TRUE);
+				DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
+			}
+	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 
@@ -222,7 +316,7 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
 		{
