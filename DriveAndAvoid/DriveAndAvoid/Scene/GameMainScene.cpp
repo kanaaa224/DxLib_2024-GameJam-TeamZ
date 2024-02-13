@@ -59,10 +59,9 @@ void GameMainScene::Initialize()
 
 
 
+	commentDatas_num = 100;
 
-
-
-	for (int i = 0; i < 100; i++)
+	/*for (int i = 0; i < 100; i++)
 	{
 		commentDatas = new CommentData;
 	}
@@ -91,7 +90,7 @@ void GameMainScene::Initialize()
 		commentDatas[commentDatas_num] = commentData;
 	}
 
-	fclose(file);
+	fclose(file);*/
 
 	comment = new Comment * [commentDatas_num];
 
@@ -117,10 +116,10 @@ eSceneType GameMainScene::Update()
 		{
 			if (comment[i] == nullptr)
 			{
-				//int type = (GetRand(4) % 4) - 1; // -1 ~ 2
-				//if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "‚±‚ñ‚Î‚ñ‚Í");
-				//else            comment[i] = new Comment(type, 16, 0xffffff, "‚±‚ñ‚É‚¿‚Í");
-				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
+				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
+				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "‚±‚ñ‚Î‚ñ‚Í");
+				else            comment[i] = new Comment(type, 16, 0xffffff, "‚±‚ñ‚É‚¿‚Í");
+				//comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				comment[i]->Initialize();
 				break;
 			}
