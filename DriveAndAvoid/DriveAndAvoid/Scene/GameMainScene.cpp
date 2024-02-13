@@ -73,7 +73,7 @@ eSceneType GameMainScene::Update()
 			if (comment[i] == nullptr)
 			{
 				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
-				if (type == -1) comment[i] = new Comment(type, 16, 0xff0000, "‚±‚ñ‚Î‚ñ‚Í");
+				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "‚±‚ñ‚Î‚ñ‚Í");
 				else            comment[i] = new Comment(type, 16, 0xffffff, "‚±‚ñ‚É‚¿‚Í");
 				comment[i]->Initialize();
 				break;

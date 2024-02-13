@@ -1,5 +1,6 @@
 ﻿#include "Comment.h"
 #include "DxLib.h"
+#include "math.h"
 
 Comment::Comment(int type, int font_size, int font_color, const char* string) : type(type), font_size(font_size), font_color(font_color), comment(string), speed(0.0f), location(0.0f), box_size(0.0f)
 {
@@ -21,7 +22,7 @@ void Comment::Initialize()
 	int canvas_x_size = 860;
 	int canvas_y_size = 484;
 
-	int max_y_grid = 28; // y 軸方向の最大割り当て数
+	int max_y_grid = round(canvas_y_size / font_size); // y 軸方向の最大割り当て数
 
 	if (type >= 0)
 	{
