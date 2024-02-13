@@ -16,7 +16,8 @@ RankingDispScene::~RankingDispScene()
 void RankingDispScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Ranking.bmp");
+	background_image = LoadGraph("Resource/images/ranking_background.png");
+	ranking_board_image = LoadGraph("Resource/images/ranking_board.png");
 
 	//エラーチェック
 	if (background_image == -1)
@@ -27,6 +28,7 @@ void RankingDispScene::Initialize()
 	//ランキング情報を取得
 	ranking = new RankingData;
 	ranking->Initialize();
+	SetFontSize(30);
 }
 
 //更新処理
@@ -45,13 +47,15 @@ eSceneType RankingDispScene::Update()
 void RankingDispScene::Draw() const
 {
 	//背景画像の描画
-	DrawGraph(0, 0, background_image, FALSE);
+	DrawGraph(0, 0, background_image, TRUE);
+	DrawRotaGraph(640, 360, 1, 0, ranking_board_image, TRUE);
+	
 
 	
 	//取得したランキングデータを描画する
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-15s %6d", ranking->GetRank(i), ranking->GetName(i), ranking->GetScore(i));
+		DrawFormatString(500, 184 + i * 49, 0x000000, "%2d %-7s %6d", ranking->GetRank(i), ranking->GetName(i), ranking->GetScore(i));
 	}
 }
 
@@ -60,6 +64,7 @@ void RankingDispScene::Finalize()
 {
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
+	DeleteGraph(ranking_board_image);
 
 	//動的メモリの解放
 	ranking->Finalize();

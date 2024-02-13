@@ -7,6 +7,7 @@ class RankingDispScene :public SceneBase
 {
 private:
 	int background_image;  //”wŒi‰æ‘œ
+	int ranking_board_image;
 	RankingData* ranking;  //ƒ‰ƒ“ƒLƒ“ƒOî•ñ
 
 public:

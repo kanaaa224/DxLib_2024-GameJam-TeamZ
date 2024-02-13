@@ -18,7 +18,10 @@ private:
 	const char *text[100];	//コメント表示
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
-	Comment** comment; //敵
+
+	Comment** comment; // 敵（コメント）
+	CommentData* commentDatas;
+	int commentDatas_num;
 
 public:
 	GameMainScene();

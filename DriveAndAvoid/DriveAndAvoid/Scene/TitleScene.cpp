@@ -16,7 +16,8 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Title.bmp");
+	chara_image = LoadGraph("Resource/images/title_chara.png");
+	background_image = LoadGraph("Resource/images/title_background.png");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
 	cursor_image = LoadGraph("Resource/images/cone.bmp");
 
@@ -33,6 +34,8 @@ void TitleScene::Initialize()
 	{
 		throw("Resource/images/cone.bmpがありません\n");
 	}
+
+	SetBackgroundColor(255, 255, 255);
 }
 
 //更新処理
@@ -84,13 +87,14 @@ eSceneType TitleScene::Update()
 void TitleScene::Draw() const
 {
 	//タイトル画像の描画
-	DrawGraph(0, 0, background_image, FALSE);
+	DrawGraph(0, 0, background_image, TRUE);
+	DrawGraph(160, 325, chara_image, TRUE);
 
 	//メニュー画像の描画
-	DrawGraph(120, 200, menu_image, TRUE);
+	DrawGraph(760, 220, menu_image, TRUE);
 
 	//カーソル画像の描画
-	DrawRotaGraph(90, 220 + menu_cursor * 40, 0.7, DX_PI / 2.0, cursor_image, TRUE);
+	DrawRotaGraph(760, 220 + menu_cursor * 40, 0.7, DX_PI / 2.0, cursor_image, TRUE);
 }
 
 //終了時処理
@@ -98,6 +102,7 @@ void TitleScene::Finalize()
 {
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
+	DeleteGraph(chara_image);
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
 }
