@@ -3,9 +3,9 @@
 class RankingData
 {
 private:
-	int score[6];  //スコアデータ
-	int rank[6];  //ランクデータ
-	char name[6][15]; //名前データ
+	int score[11];  //スコアデータ
+	int rank[11]; //ランクデータ
+	char name[11][7]; //名前データ
 
 public:
 	RankingData();
