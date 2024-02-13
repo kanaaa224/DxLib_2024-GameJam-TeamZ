@@ -1,7 +1,7 @@
 #include"Object/Bullet.h"
 #include"DxLib.h"
 
-Bullet::Bullet() :bullet_size(5), bullet_speed(2)
+Bullet::Bullet(int type) :bullet_size(5), bullet_speed(5),bullet_pos(0),bullet_type(0)
 {
 
 }
@@ -13,15 +13,15 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
-	bullet_speed++;
+	bullet_pos += bullet_speed;
 }
 
 void Bullet::Draw(const Vector2D& location) const
 {
-	DrawCircle(location.x + bullet_speed, location.y, bullet_size, 0xFFFFFF, TRUE);
+	DrawCircle(location.x + bullet_pos, location.y, bullet_size, 0xFFFFFF, TRUE);
 }
 
 bool Bullet::IsFinished(Vector2D& pos)
 {
-	return ((pos.x + bullet_speed >= 1000.0f - 180.0f) || (pos.y + bullet_speed < bullet_size * 2) || (pos.y + bullet_speed >= 600.0f - bullet_size * 2));
+	return ((pos.x + bullet_pos >= 1000.0f - 180.0f) || (pos.y  < bullet_size * 2) || (pos.y  >= 600.0f - bullet_size * 2));
 }

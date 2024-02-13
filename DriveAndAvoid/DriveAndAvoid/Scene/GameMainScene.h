@@ -2,7 +2,7 @@
 
 #include"SceneBase.h"
 #include"../Object/Player.h"
-#include"../Object/Enemy.h"
+#include"../Object/Comment.h"
 
 class GameMainScene :public SceneBase
 {
@@ -16,7 +16,7 @@ private:
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
 	Player* player;  //プレイヤー
-	Enemy** enemy; //敵
+	Comment** comment; //敵
 
 public:
 	GameMainScene();
@@ -33,5 +33,5 @@ private:
 	//ハイスコア読み込み処理
 	void ReadHighScore();
 	//当たり判定
-	bool IsHitCheck(Player* p, Enemy* e);
+	bool IsHitCheck(Player* p, Comment* e);
 };

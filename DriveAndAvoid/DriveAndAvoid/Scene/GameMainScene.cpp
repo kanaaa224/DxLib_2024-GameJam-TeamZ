@@ -3,7 +3,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr), comment_count(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -45,14 +45,14 @@ void GameMainScene::Initialize()
 
 	//オブジェクトの生成
 	player = new Player;
-	enemy = new Enemy * [10];
+	comment = new Comment * [100];
 
 	//オブジェクトの初期化
 	player->Initialize();
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		enemy[i] = nullptr;
+		comment[i] = nullptr;
 	}
 }
 
@@ -68,45 +68,43 @@ eSceneType GameMainScene::Update()
 	//敵生成処理
 	if (mileage / 20 % 100 == 0)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 100; i++)
 		{
-			if (enemy[i] == nullptr)
+			if (comment[i] == nullptr)
 			{
-				int type = GetRand(3) % 3;
-				enemy[i] = new Enemy(type, 16, 0xffffff, "こんにちは");
-				enemy[i]->Initialize();
-				comment_count++;
+				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
+				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
+				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				comment[i]->Initialize();
 				break;
 			}
 		}
 	}
 
 	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		if (enemy[i] != nullptr)
+		if (comment[i] != nullptr)
 		{
-			enemy[i]->Update(player->GetSpped());
+			comment[i]->Update(player->GetSpped());
 
 			//画面外に行ったら、敵を削除してスコア加算
-			if (enemy[i]->GetLocation().x <= 0.0f)
+			if (comment[i]->GetLocation().y >= 640.0f)
 			{
-				enemy_count[enemy[i]->GetType()]++;
-				enemy[i]->Fialize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-				comment_count--;
+				enemy_count[comment[i]->GetType()]++;
+				comment[i]->Fialize();
+				delete comment[i];
+				comment[i] = nullptr;
 			}
 
 			//当たり判定の確認
-			if (IsHitCheck(player, enemy[i]))
+			if (IsHitCheck(player, comment[i]))
 			{
 				player->SetActive(false);
 				player->DecreaseHP(-5.0f);
-				enemy[i]->Fialize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-				comment_count--;
+				comment[i]->Fialize();
+				delete comment[i];
+				comment[i] = nullptr;
 			}
 		}
 	}
@@ -128,12 +126,9 @@ void GameMainScene::Draw() const
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
 	//敵の描画
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Draw();
-		}
+		if (comment[i] != nullptr) comment[i]->Draw();
 	}
 
 	//プレイヤーの描画
@@ -223,17 +218,17 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		if (enemy[i] != nullptr)
+		if (comment[i] != nullptr)
 		{
-			enemy[i]->Fialize();
-			delete enemy[i];
-			enemy[i] = nullptr;
+			comment[i]->Fialize();
+			delete comment[i];
+			comment[i] = nullptr;
 		}
 	}
 
-	delete[] enemy;
+	delete[] comment;
 }
 
 //現在のシーン情報を取得
@@ -254,7 +249,7 @@ void GameMainScene::ReadHighScore()
 }
 
 //当たり判定処理(プレイヤーと敵)
-bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
+bool GameMainScene::IsHitCheck(Player* p, Comment* e)
 {
 	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
 	if (p->IsBarrier())
