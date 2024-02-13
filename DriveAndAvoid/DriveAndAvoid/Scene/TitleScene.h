@@ -6,6 +6,7 @@ class TitleScene :public SceneBase
 {
 private:
 	int background_image;  //背景画像
+	int chara_image;//タイトル画面のキャラクター画像
 	int menu_image;  //メニュー画像
 	int cursor_image;  //カーソル画像
 	int menu_cursor;   //メニューカーソル番号
