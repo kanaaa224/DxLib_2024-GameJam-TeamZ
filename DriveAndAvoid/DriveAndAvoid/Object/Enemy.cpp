@@ -19,7 +19,7 @@ void Enemy::Initialize()
 	speed = (float)(this->type * 2);
 
 	// 生成位置の設定
-	location = Vector2D(700.0f, ((float)(GetRand(4) * 105 + 40)));
+	location = Vector2D(890.0f, ((float)(GetRand(4) * 105 + 40)));
 
 	// 当たり判定の大きさ設定
 	box_size = Vector2D(31.0f, 60.0f);
@@ -56,4 +56,10 @@ Vector2D Enemy::GetLocation() const
 Vector2D Enemy::GetBoxSize() const
 {
 	return box_size;
+}
+
+char Enemy::GetComment() const
+{
+	char com = *comment;
+	return com;
 }

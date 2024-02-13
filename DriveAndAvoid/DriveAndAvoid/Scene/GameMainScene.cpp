@@ -3,7 +3,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr), comment_count(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -75,6 +75,7 @@ eSceneType GameMainScene::Update()
 				int type = GetRand(3) % 3;
 				enemy[i] = new Enemy(type, 16, 0xffffff, "こんにちは");
 				enemy[i]->Initialize();
+				comment_count++;
 				break;
 			}
 		}
@@ -88,12 +89,13 @@ eSceneType GameMainScene::Update()
 			enemy[i]->Update(player->GetSpped());
 
 			//画面外に行ったら、敵を削除してスコア加算
-			if (enemy[i]->GetLocation().y >= 640.0f)
+			if (enemy[i]->GetLocation().x <= 0.0f)
 			{
 				enemy_count[enemy[i]->GetType()]++;
 				enemy[i]->Fialize();
 				delete enemy[i];
 				enemy[i] = nullptr;
+				comment_count--;
 			}
 
 			//当たり判定の確認
@@ -104,6 +106,7 @@ eSceneType GameMainScene::Update()
 				enemy[i]->Fialize();
 				delete enemy[i];
 				enemy[i] = nullptr;
+				comment_count--;
 			}
 		}
 	}
@@ -169,8 +172,17 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
-	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
+	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
+	for (int i = 0; i < comment_count; i++)
+	{
+		if (150 + (i * 65) <= 650)
+		{
+			DrawBox(890, 90 + (i * 65), 1235, 150 + (i * 65), 0x000000, FALSE);
+			DrawBox(891, 91 + (i * 65), 1234, 149 + (i * 65), 0xff2510, TRUE);
+		}
+	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 

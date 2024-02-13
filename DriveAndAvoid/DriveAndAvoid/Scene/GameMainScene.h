@@ -14,6 +14,7 @@ private:
 	int mileage;   //走行距離
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
+	int comment_count;	//生成したコメント数
 	Player* player;  //プレイヤー
 	Enemy** enemy; //敵
 
