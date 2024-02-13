@@ -45,12 +45,57 @@ void GameMainScene::Initialize()
 
 	//オブジェクトの生成
 	player = new Player;
-	comment = new Comment * [100];
 
 	//オブジェクトの初期化
 	player->Initialize();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 	for (int i = 0; i < 100; i++)
+	{
+		commentDatas = new CommentData;
+	}
+
+	FILE* file;
+	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
+
+	if (file_result != 0) throw("Resource/dat/comment.csv が開けませんでした。\n");
+	if (file == NULL)     throw("Resource/dat/comment.csv が開けませんでした。\n");
+
+	char str[100];
+	unsigned int font_color;
+	int font_size;
+	int type;
+
+	commentDatas_num = -1;
+
+	while (fscanf_s(file, "%[^,],%x,%d,%d\n", str, sizeof(str), &font_color, &font_size, &type) == 4) {
+		CommentData commentData;
+		commentData.comment    = str;
+		commentData.font_color = font_color;
+		commentData.font_size  = font_size;
+		commentData.type       = type;
+
+		commentDatas_num++;
+		commentDatas[commentDatas_num] = commentData;
+	}
+
+	fclose(file);
+
+	comment = new Comment * [commentDatas_num];
+
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		comment[i] = nullptr;
 	}
@@ -68,13 +113,14 @@ eSceneType GameMainScene::Update()
 	//敵生成処理
 	if (mileage / 20 % 100 == 0)
 	{
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < commentDatas_num; i++)
 		{
 			if (comment[i] == nullptr)
 			{
-				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
-				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
-				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				//int type = (GetRand(4) % 4) - 1; // -1 ~ 2
+				//if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
+				//else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				comment[i]->Initialize();
 				break;
 			}
@@ -82,7 +128,7 @@ eSceneType GameMainScene::Update()
 	}
 
 	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
 		{
@@ -126,7 +172,7 @@ void GameMainScene::Draw() const
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
 
 	//敵の描画
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr) comment[i]->Draw();
 	}
@@ -209,7 +255,7 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
 		{
