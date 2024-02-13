@@ -100,9 +100,8 @@ eSceneType GameMainScene::Update()
 			}
 
 			//当たり判定の確認
-			if (IsHitCheck(player, enemy[i]))
+			if (player->HitPlayer(enemy[i]->GetLocation(),enemy[i]->GetBoxSize()))
 			{
-				//player->SetActive(false);
 				enemy[i]->Fialize();
 				delete enemy[i];
 				enemy[i] = nullptr;
@@ -238,35 +237,4 @@ void GameMainScene::ReadHighScore()
 	high_score = data.GetScore(0);
 
 	data.Finalize();
-}
-
-//当たり判定処理(プレイヤーと敵)
-bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
-{
-	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
-	if (p->IsBarrier())
-	{
-		return false;
-	}
-
-	//敵情報が無ければ、当たり判定を無視する
-	if (e == nullptr)
-	{
-		return false;
-	}
-
-	float sx1 = p->GetLocation().x;
-	float sx2 = p->GetLocation().x + p->GetBoxSize().x;
-	float sy1 = p->GetLocation().y;
-	float sy2 = p->GetLocation().y + p->GetBoxSize().y;
-
-	float dx1 = e->GetLocation().x;
-	float dx2 = e->GetLocation().x + e->GetBoxSize().x;
-	float dy1 = e->GetLocation().y;
-	float dy2 = e->GetLocation().y + e->GetBoxSize().y;
-
-	//矩形が重なっていれば当たり
-	if (sx1 < dx2 && dx1 < sx2 && sy1 < dy2 && dy1 < sy2)return TRUE;
-
-	return FALSE;
 }
