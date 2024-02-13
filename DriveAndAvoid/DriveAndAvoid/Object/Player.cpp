@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0)
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0),bullet_flg(true)
 {
 
 }
@@ -17,13 +17,13 @@ void Player::Initialize()
 {
 	is_active = true;
 	location = Vector2D(320.0f, 380.0f);
-	box_size = Vector2D(100.0f, 35.0f);
+	box_size = Vector2D(115.0f, 35.0f);
 	angle = 0.0f;
 	speed = 3.0f;
 	hp = 50;
 	fuel = 20000;
 	bullet_count = 0;
-
+	bullet_flg = true;
 	bullet = new Bullet * [20];
 
 	for (int i = 0; i < 20; i++)
@@ -54,11 +54,12 @@ void Player::Update()
 	//íeê∂ê¨èàóùèàóù
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count < 20)
 	{
-		if (bullet[bullet_count] == nullptr && is_active == true)
+		if (bullet[bullet_count] == nullptr)
 		{
 			bullet_pos[bullet_count] = location;
-			bullet[bullet_count] = new Bullet(0);
+			bullet[bullet_count] = new Bullet(location);
 			bullet_count++;
+
 		}
 	}
 
@@ -68,7 +69,7 @@ void Player::Update()
 		if (bullet[i] != nullptr)
 		{
 			bullet[i]->Update();
-			if (bullet[i]->IsFinished(this->bullet_pos[i]))
+			if (bullet[i]->IsFinished() || bullet_flg == false)
 			{
 				delete bullet[i];
 				bullet[i] = nullptr;
@@ -77,17 +78,7 @@ void Player::Update()
 		}
 	}
 
-	//ëÄçÏïsâ¬èÛë‘Ç≈Ç†ÇÍÇŒÅAé©êgÇâÒì]Ç≥ÇπÇÈ
-	if (!is_active)
-	{
-		angle += DX_PI_F / 24.0f;
-		speed = 1.0f;
-		if (angle >= DX_PI_F * 4.0f)
-		{
-			is_active = true;
-		}
-		return;
-	}
+	
 
 	//îRóøÇÃè¡îÔ
 	fuel -= speed;
@@ -109,14 +100,14 @@ void Player::Update()
 void Player::Draw()
 {
 	//ÉvÉåÉCÉÑÅ[âÊëúÇÃï`âÊ
-	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+	DrawGraphF(location.x, location.y, image, TRUE);
 
 	for (int i=0; i < 20; i++)
 	{
 		//íeÇ™ê∂ê¨Ç≥ÇÍÇƒÇ¢ÇΩÇÁÅAï`âÊÇçsÇ§
 		if (bullet[i] != nullptr)
 		{
-			bullet[i]->Draw(this->bullet_pos[i]);
+			bullet[i]->Draw();
 		}
 	}
 }
@@ -140,6 +131,12 @@ void Player::SetActive(bool flg)
 	this->is_active = flg;
 }
 
+//íeÇÃèÛë‘ê›íËä«óù
+void Player::SetBulletActive(bool flg)
+{
+	this->bullet_flg = flg;
+}
+
 //ëÃóÕå∏è≠èàóù
 void Player::DecreaseHP(float value)
 {
@@ -150,6 +147,12 @@ void Player::DecreaseHP(float value)
 Vector2D Player::GetLocation() const
 {
 	return this->location;
+}
+
+//íeÇÃà íuç¿ïWéÊìæ
+Vector2D Player::GetBulletLocation() 
+{
+	return  this->bullet_pos[bullet_count] += bullet[bullet_count]->GetLocation();	
 }
 
 //ìñÇΩÇËîªíËÇÃëÂÇ´Ç≥éÊìæèàóù
@@ -208,12 +211,10 @@ void Player::Movement()
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
 		move += Vector2D(0.0f, -3.0f);
-		angle = -DX_PI_F / 18;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
 	{
 		move += Vector2D(0.0f, 3.0f);
-		angle = -DX_PI_F / -18;
 	}
 
 	location += move;
@@ -239,4 +240,22 @@ void Player::Acceleration()
 	{
 		speed += 1.0f;
 	}
+}
+
+bool Player::HitBullet(Vector2D location, Vector2D size)
+{
+	bool is_hit = false;
+	for (int i = 0; i < 20; i++)
+	{
+		if (bullet[i] != nullptr)
+		{
+			if (bullet[i]->Hit(location, size))
+			{
+				delete bullet[i];
+				bullet[i] = nullptr;
+				is_hit = true;
+			}
+		}
+	}
+	return is_hit;
 }
