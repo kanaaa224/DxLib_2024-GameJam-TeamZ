@@ -23,6 +23,7 @@ void Player::Initialize()
 	speed = 3.0f;
 
 	bullet = new Bullet * [BULLET_MAX_NUM];
+
 	for (int i = 0; i < BULLET_MAX_NUM; i++)
 	{
 		bullet[i] = nullptr;

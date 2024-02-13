@@ -77,10 +77,10 @@ void CommentManager::CommentGenerate()
 			if (!comment[i].can_draw)
 			{
 				comment[i].can_draw = true;
-				comment[i].hp = strlen(comments[comment[i].type]);
+				comment[i].hp = 5;
 				comment[i].color = 0xffffff;
 				comment[i].type = GetRand(COMMENT_TYPE - 1);
-				comment[i].speed = comment[i].hp / 5;
+				comment[i].speed = (float)(GetDrawFormatStringWidth(comments[comment[i].type]) / 80) + 1;
 				comment[i].location = Vector2D(1500.0f + GetRand(500), GetRand(19) * FONT_SIZE + 3);
 				comment[i].box_size = Vector2D(GetDrawFormatStringWidth(comments[comment[i].type]), FONT_SIZE);
 				break;
