@@ -17,7 +17,7 @@ void Player::Initialize()
 {
 	is_active = true;
 	location = Vector2D(320.0f, 380.0f);
-	box_size = Vector2D(31.0f, 60.0f);
+	box_size = Vector2D(100.0f, 35.0f);
 	angle = 0.0f;
 	speed = 3.0f;
 	hp = 50;
@@ -197,22 +197,22 @@ void Player::Movement()
 	//è\éöà⁄ìÆèàóù
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
-		move += Vector2D(-1.0f, 0.0f);
+		move += Vector2D(-3.0f, 0.0f);
 		
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
-		move += Vector2D(1.0f, 0.0f);
+		move += Vector2D(3.0f, 0.0f);
 		
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
-		move += Vector2D(0.0f, -1.0f);
+		move += Vector2D(0.0f, -3.0f);
 		angle = -DX_PI_F / 18;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
 	{
-		move += Vector2D(0.0f, 1.0f);
+		move += Vector2D(0.0f, 3.0f);
 		angle = -DX_PI_F / -18;
 	}
 
