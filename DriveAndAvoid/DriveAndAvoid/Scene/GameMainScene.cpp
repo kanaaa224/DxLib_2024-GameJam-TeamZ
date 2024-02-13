@@ -153,7 +153,7 @@ eSceneType GameMainScene::Update()
 		//“–‚½‚è”»’è‚ÌŠm”F
 		if (comment[i] != nullptr)
 		{
-			if (IsHitCheck(player, comment[i]))
+			if (player->HitPlayer(comment[i]->GetLocation(),comment[i]->GetBoxSize()))
 			{
 				player->SetActive(false);
 				player->DecreaseHP(-5.0f);

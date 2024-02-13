@@ -45,7 +45,7 @@ public:
 	int GetBarrierCount() const;  //バリアの枚数取得
 	bool IsBarrier() const;  //バリア有効か？を取得
 	bool HitBullet(Vector2D location, Vector2D size); //弾の当たり判定
-
+	bool HitPlayer(Vector2D location, Vector2D size); //プレイヤーの当たり判定
 private:
 	void Movement();  //移動処理
 	void Acceleration();  //加速処理
