@@ -3,7 +3,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr),comment_count(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr),comment_count(0),disp_hpbar(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -12,7 +12,7 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 	}
 	for (int i = 0; i < 100; i++)
 	{
-		test[i] = 0;
+		text[i] = 0;
 	}
 }
 
@@ -77,8 +77,9 @@ eSceneType GameMainScene::Update()
 			if (comment[i] == nullptr)
 			{
 				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
-				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは"),test[i] = "こんばんは";
-				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは"), test[i] = "こんにちは";
+				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
+				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				text[i] = comment[i]->GetComment();
 				comment[i]->Initialize();
 				comment_count++;
 				break;
@@ -100,11 +101,6 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
-				for (int k = i; k < 99; k++)
-				{
-					test[k] = test[k + 1];
-				}
-				test[99] = 0;
 				comment_count--;
 			}
 
@@ -116,21 +112,28 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
-				for (int k = i; k < 99; k++)
-				{
-					test[k] = test[k + 1];
-				}
-				test[99] = 0;
+				disp_hpbar = 60;
 				comment_count--;
 			}
+		}
+		else
+		{
+			int k = i;
+			while (comment[k] == nullptr)
+			{
+				k++;
+			}
+			if(k<100) text[i] = comment[k]->GetComment();
 		}
 	}
 
 	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHP() < 0.0f)
+	if (player->GetFuel() < 0.0f || player->GetHP() <= 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
+
+	if (disp_hpbar > 0) disp_hpbar--;
 
 	return GetNowScene();
 }
@@ -151,7 +154,17 @@ void GameMainScene::Draw() const
 	//プレイヤーの描画
 	player->Draw();
 
+	
 	//UIの描画
+	if (disp_hpbar > 0)
+	{
+		Vector2D HPbar = player->GetLocation();
+		DrawBoxAA(HPbar.x - 50, HPbar.y - 30, HPbar.x + 50, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
+		for (int i = 0; i < player->GetHP(); i++)
+		{
+			DrawBoxAA(HPbar.x - (48 - i * 2), HPbar.y - 28, HPbar.x - (45 - i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
+		}
+	}
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	SetFontSize(15);
@@ -186,16 +199,16 @@ void GameMainScene::Draw() const
 	//fy = 430.0f;
 	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
 	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
-	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage);
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
 	for (int i = 0; i < comment_count ; i++)
 	{
-		if (150 + (i * 65) <= 600)
-		{
-			DrawBox(890, 90 + (i * 65), 1235, 150 + (i * 65), 0x000000, FALSE);
-			DrawBox(891, 91 + (i * 65), 1234, 149 + (i * 65), 0xff2510, TRUE);
-			DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", test[i]);
-		}
+			if (140 + (i * 65) <= 600)
+			{
+				DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+				DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff2510, TRUE);
+				DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
+			}
 	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }

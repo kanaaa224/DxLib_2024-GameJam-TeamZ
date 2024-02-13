@@ -20,7 +20,7 @@ void Player::Initialize()
 	box_size = Vector2D(31.0f, 60.0f);
 	angle = 0.0f;
 	speed = 3.0f;
-	hp = 500;
+	hp = 50;
 	fuel = 20000;
 	bullet_count = 0;
 
