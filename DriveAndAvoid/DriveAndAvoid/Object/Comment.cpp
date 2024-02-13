@@ -15,13 +15,27 @@ Comment::~Comment()
 
 void Comment::Initialize()
 {
-	// 速さの設定
-	speed = (float)(this->type * 2);
+	int margin_top  = 25; // y 軸方向の上マージン
+	int margin_left = 25; // x 軸方向の左マージン
 
-	// 生成位置の設定
-	int max_y_grid   = 28; // y 軸方向の最大割り当て数
-	int y_margin_top = 30; // y 軸方向の上マージン
-	location = Vector2D(1280.0f, ((float)(GetRand(max_y_grid) * font_size + y_margin_top)));
+	int canvas_x_size = 860;
+	int canvas_y_size = 484;
+
+	int max_y_grid = 28; // y 軸方向の最大割り当て数
+
+	if (type >= 0)
+	{
+		// 速さの設定
+		speed = (float)(this->type * 2);
+
+		// 生成位置の設定
+		location = Vector2D((margin_left + canvas_x_size), ((float)(GetRand(max_y_grid) * font_size + margin_top)));
+	}
+	else
+	{
+		// 生成位置の設定
+		location = Vector2D((margin_left + (canvas_x_size / 2)) - (GetDrawFormatStringWidth(comment) / 2), ((float)(GetRand(max_y_grid) * font_size + margin_top)));
+	}
 
 	// 当たり判定の大きさ設定
 	box_size = Vector2D(GetDrawFormatStringWidth(comment), font_size);
@@ -29,7 +43,7 @@ void Comment::Initialize()
 
 void Comment::Update(float speed)
 {
-	location -= Vector2D(this->speed + speed, 0.0f); // 位置情報に移動量を加算
+	if (type >= 0) location -= Vector2D(this->speed + speed, 0.0f); // 位置情報に移動量を加算
 }
 
 void Comment::Draw() const
@@ -37,7 +51,7 @@ void Comment::Draw() const
 	SetFontSize(font_size);
 	DrawFormatString(location.x, location.y, font_color, comment);
 
-	DrawBox(location.x, location.y, location.x + GetDrawFormatStringWidth(comment), location.y + font_size, 0xffffff, false);
+	//DrawBox(location.x, location.y, location.x + GetDrawFormatStringWidth(comment), location.y + font_size, 0xffffff, false);
 }
 
 void Comment::Fialize()
