@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0), bullet(nullptr)
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0)
 {
 
 }
@@ -22,7 +22,15 @@ void Player::Initialize()
 	speed = 3.0f;
 	hp = 50;
 	fuel = 20000;
-	bullet_count = 3;
+	bullet_count = 0;
+
+	bullet = new Bullet * [20];
+
+	for (int i = 0; i < 20; i++)
+	{
+		bullet[i] = nullptr;
+		bullet_pos[i] = 0;
+	}
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/jet.png");
@@ -37,25 +45,35 @@ void Player::Initialize()
 //更新処理
 void Player::Update()
 {
-	//弾生成処理処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count > 0)
+
+	if (bullet_count >= 20)
 	{
-		if (bullet == nullptr)
+		bullet_count = 0;
+	}
+
+	//弾生成処理処理
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count < 20)
+	{
+		if (bullet[bullet_count] == nullptr && is_active == true)
 		{
-			bullet_pos = location;
-			bullet_count--;
-			bullet = new Bullet;
+			bullet_pos[bullet_count] = location;
+			bullet[bullet_count] = new Bullet(0);
+			bullet_count++;
 		}
 	}
 
 	//弾が生成されていたら、更新を行う
-	if (bullet != nullptr)
+	for (int i = 0; i < 20; i++)
 	{
-		bullet->Update();
-		if (bullet->IsFinished(this->bullet_pos))
+		if (bullet[i] != nullptr)
 		{
-			delete bullet;
-			bullet = nullptr;
+			bullet[i]->Update();
+			if (bullet[i]->IsFinished(this->bullet_pos[i]))
+			{
+				delete bullet[i];
+				bullet[i] = nullptr;
+				bullet_pos[i] = 0;
+			}
 		}
 	}
 
@@ -93,10 +111,13 @@ void Player::Draw()
 	//プレイヤー画像の描画
 	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
 
-	//弾が生成されていたら、描画を行う
-	if (bullet != nullptr)
+	for (int i=0; i < 20; i++)
 	{
-		bullet->Draw(this->bullet_pos);
+		//弾が生成されていたら、描画を行う
+		if (bullet[i] != nullptr)
+		{
+			bullet[i]->Draw(this->bullet_pos[i]);
+		}
 	}
 }
 
@@ -177,20 +198,22 @@ void Player::Movement()
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
 		move += Vector2D(-1.0f, 0.0f);
-		angle = -DX_PI_F - 18;
+		
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		move += Vector2D(1.0f, 0.0f);
-		angle = -DX_PI_F / 18;
+		
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
 		move += Vector2D(0.0f, -1.0f);
+		angle = -DX_PI_F / 18;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
 	{
 		move += Vector2D(0.0f, 1.0f);
+		angle = -DX_PI_F / -18;
 	}
 
 	location += move;
