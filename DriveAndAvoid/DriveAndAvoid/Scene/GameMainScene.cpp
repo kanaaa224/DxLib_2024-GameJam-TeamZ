@@ -100,7 +100,11 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
-				test[i] = test[i + 1];
+				for (int k = i; k < 99; k++)
+				{
+					test[k] = test[k + 1];
+				}
+				test[99] = 0;
 				comment_count--;
 			}
 
@@ -112,7 +116,11 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
-				test[i] = test[i + 1];
+				for (int k = i; k < 99; k++)
+				{
+					test[k] = test[k + 1];
+				}
+				test[99] = 0;
 				comment_count--;
 			}
 		}
@@ -182,7 +190,7 @@ void GameMainScene::Draw() const
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
 	for (int i = 0; i < comment_count ; i++)
 	{
-		if (150 + (i * 65) <= 650)
+		if (150 + (i * 65) <= 600)
 		{
 			DrawBox(890, 90 + (i * 65), 1235, 150 + (i * 65), 0x000000, FALSE);
 			DrawBox(891, 91 + (i * 65), 1234, 149 + (i * 65), 0xff2510, TRUE);
