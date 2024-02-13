@@ -2,7 +2,7 @@
 
 #include "../Utility/Vector2D.h"
 
-class Enemy
+class Comment
 {
 private:
 	int type;            // タイプ
@@ -14,8 +14,8 @@ private:
 	Vector2D box_size;   // 当たり判定の大きさ
 
 public:
-	Enemy(int type, int font_size, int font_color, const char* string); // typeが0は移動無し
-	~Enemy();
+	Comment(int type, int font_size, int font_color, const char* string); // typeが0は移動無し
+	~Comment();
 
 	void Initialize();        // 初期化処理
 	void Update(float spped); // 更新処理
