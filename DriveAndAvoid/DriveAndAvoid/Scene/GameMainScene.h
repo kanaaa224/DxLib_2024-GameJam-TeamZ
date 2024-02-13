@@ -15,7 +15,10 @@ private:
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
 	Player* player;  //プレイヤー
-	Comment** comment; //敵
+
+	Comment** comment; // 敵（コメント）
+	CommentData* commentDatas;
+	int commentDatas_num;
 
 public:
 	GameMainScene();
