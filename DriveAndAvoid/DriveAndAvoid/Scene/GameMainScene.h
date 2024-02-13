@@ -15,6 +15,7 @@ private:
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
+	const char *test[100];		//コメント表示テスト
 	Player* player;  //プレイヤー
 	Comment** comment; //敵
 

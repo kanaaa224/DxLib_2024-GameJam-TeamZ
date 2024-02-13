@@ -3,12 +3,16 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr),comment_count(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
+	}
+	for (int i = 0; i < 100; i++)
+	{
+		test[i] = 0;
 	}
 }
 
@@ -73,9 +77,10 @@ eSceneType GameMainScene::Update()
 			if (comment[i] == nullptr)
 			{
 				int type = (GetRand(4) % 4) - 1; // -1 ~ 2
-				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは");
-				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
+				if (type == -1) comment[i] = new Comment(type, 22, 0xff0000, "こんばんは"),test[i] = "こんばんは";
+				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは"), test[i] = "こんにちは";
 				comment[i]->Initialize();
+				comment_count++;
 				break;
 			}
 		}
@@ -89,12 +94,14 @@ eSceneType GameMainScene::Update()
 			comment[i]->Update(player->GetSpped());
 
 			//画面外に行ったら、敵を削除してスコア加算
-			if (comment[i]->GetLocation().y >= 640.0f)
+			if (comment[i]->GetLocation().x <= 0.0f)
 			{
 				enemy_count[comment[i]->GetType()]++;
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
+				test[i] = test[i + 1];
+				comment_count--;
 			}
 
 			//当たり判定の確認
@@ -105,6 +112,8 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
+				test[i] = test[i + 1];
+				comment_count--;
 			}
 		}
 	}
@@ -169,13 +178,15 @@ void GameMainScene::Draw() const
 	//fy = 430.0f;
 	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
 	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
-	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
-	for (int i = 0; i < comment_count; i++)
+	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage);
+	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
+	for (int i = 0; i < comment_count ; i++)
 	{
 		if (150 + (i * 65) <= 650)
 		{
 			DrawBox(890, 90 + (i * 65), 1235, 150 + (i * 65), 0x000000, FALSE);
 			DrawBox(891, 91 + (i * 65), 1234, 149 + (i * 65), 0xff2510, TRUE);
+			DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", test[i]);
 		}
 	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
