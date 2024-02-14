@@ -31,7 +31,7 @@ void GameMainScene::Initialize()
 
 	//‰æ‘œ‚Ì“Ç‚Ýž‚Ý
 	back_ground = LoadGraph("Resource/images/background.png");
-	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
+	gamemainscene_image = LoadGraph("Resource/images/stream.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
 	img_gameoverWindow = LoadGraph("Resource/images/gameover_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
@@ -290,7 +290,7 @@ eSceneType GameMainScene::Update()
 //•`‰æˆ—
 void GameMainScene::Draw() const
 {
-	SetFontSize(16);
+	SetFontSize(14);
 
 	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
@@ -358,19 +358,19 @@ void GameMainScene::Draw() const
 	////‘Ì—ÍƒQ[ƒW‚Ì•`‰æ
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.1f–œl", player->GetHP());
-	DrawFormatString(287, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
-	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
+	DrawFormatString(260, 628, GetColor(0, 0, 0), "%.1f–œl", player->GetHP());
+	DrawFormatString(310, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
+	DrawFormatString(270, 645, GetColor(0, 0, 0), "%08d", mileage / 10);
 	
-	for (int i = 0; i < comment_count; i++)
-	{
-		if (140 + (i * 65) <= 600)
-		{
-			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), color_num[i], TRUE);
-			DrawFormatString(895, 110 + (i * 65), 0x000000, "%s", text[i]);
-		}
-	}
+	//for (int i = 0; i < comment_count; i++)
+	//{
+	//	if (140 + (i * 65) <= 600)
+	//	{
+	//		DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+	//		DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), color_num[i], TRUE);
+	//		DrawFormatString(895, 110 + (i * 65), 0x000000, "%s", text[i]);
+	//	}
+	//}
 
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
