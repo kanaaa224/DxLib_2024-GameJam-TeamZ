@@ -168,7 +168,7 @@ eSceneType GameMainScene::Update()
 		{
 			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
 			{
-				enemy_count[comment[i]->GetType()]++;
+				/*enemy_count[comment[i]->GetType()]++;*/
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
@@ -181,7 +181,7 @@ eSceneType GameMainScene::Update()
 		{
 			if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
 			{
-				enemy_count[comment[i]->GetType()]++;
+				/*enemy_count[comment[i]->GetType()]++;*/
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
@@ -196,10 +196,11 @@ eSceneType GameMainScene::Update()
 			{
 				if (comment[i]->GetFontColor() == 0x00ffff) {
 					// ‰ñ•œ
+					player->DecreaseHP(2);
 				}
 				
 				player->SetActive(false);
-				player->DecreaseHP(-0.5f);
+				player->DecreaseHP(-1.0f);
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
@@ -215,6 +216,7 @@ eSceneType GameMainScene::Update()
 			{
 				if (comment[i]->GetFontColor() == 0x00ffff) {
 					// ‰ñ•œ
+					player->DecreaseHP(2);
 				}
 
 				comment[i]->Fialize();
@@ -309,9 +311,10 @@ void GameMainScene::Draw() const
 	if (disp_hpbar > 0)
 	{
 		Vector2D HPbar = player->GetLocation();
-		DrawBoxAA(HPbar.x, HPbar.y - 30, HPbar.x + 110, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
+		DrawBoxAA(HPbar.x, HPbar.y - 30, HPbar.x + 106, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
 		for (int i = 0; i < player->GetHP(); i++)
 		{
+			if(i<=50)
 			DrawBoxAA(HPbar.x + (2 + i * 2), HPbar.y - 28, HPbar.x + (4 + i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
 		}
 	}
@@ -348,9 +351,8 @@ void GameMainScene::Draw() const
 	//fx = 510.0f;
 	//fy = 430.0f;
 	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.1f–œl", player->GetHP());
-	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
+	DrawFormatString(287, 577, GetColor(0, 0, 0), "%.0f–œl", player->GetSpped());
 	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
-	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
 	
 	for (int i = 0; i < comment_count; i++)
 	{
