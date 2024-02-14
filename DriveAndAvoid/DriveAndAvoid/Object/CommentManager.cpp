@@ -62,10 +62,9 @@ void CommentManager::Draw() const
 
 	for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
-		if (comment[i].can_draw)
+		if (comment[i] != nullptr)
 		{
-			DrawFormatString(comment[i].location.x, comment[i].location.y, comment[i].color, comments[comment[i].type]);
-			DrawBox(comment[i].location.x, comment[i].location.y, comment[i].location.x + comment[i].box_size.x, comment[i].location.y + comment[i].box_size.y, 0xffffff, false);
+			comment[i]->Draw();
 		}
 
 	}

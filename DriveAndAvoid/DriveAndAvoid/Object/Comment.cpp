@@ -9,30 +9,22 @@ Comment::Comment(const char* comment, int font_size) : Collider(Vector2D(0.0f, 0
 }
 
 //更新処理
-bool Comment::Update()
+void Comment::Update()
 {
 	color = 0xffffff;
 	location.x -= speed;
-
-
-	if ((comment[i].location.x -= comment[i].speed) < -500)comment[i].can_draw = false;
-	if (player->HitPlayer(comment[i].location, comment[i].box_size))comment[i].can_draw = false;
-	if (player->HitBullet(comment[i].location, comment[i].box_size))
-	{
-		comment[i].color = 0xff0000;
-		if (--comment[i].hp <= 0)comment[i].can_draw = false;
-	}
 }
 
 //描画処理
-void Comment::Draw()
+void Comment::Draw()const
 {
 	//プレイヤー画像の描画
 	DrawFormatString(location.x, location.y, color, comment);
 	DrawBox(location.x, location.y, location.x + size.x, location.y + size.y, color, FALSE);
 }
 
-int Comment::GetHp()const
+int Comment::HitBullet()
 {
-	return hp;
+	hp--;
+	color = 0xff0000;
 }

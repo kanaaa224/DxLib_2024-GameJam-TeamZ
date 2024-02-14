@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
     <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Object\Collider.cpp" />
     <ClCompile Include="Object\Comment.cpp" />
     <ClCompile Include="Object\CommentManager.cpp" />

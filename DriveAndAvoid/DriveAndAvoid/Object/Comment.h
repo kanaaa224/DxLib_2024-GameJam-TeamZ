@@ -14,6 +14,7 @@ private:
 public:
 	Comment(const char* comment, int font_size);
 	~Comment() {};
-	bool Update(Player* player);  //更新処理(戻り値で、現在コメントが消せるかを返す)
-	void Draw();  //描画処理
+	void Update();  //更新処理
+	void Draw()const;  //描画処理
+	int HitBullet();//弾を受けた時の処理
 };
