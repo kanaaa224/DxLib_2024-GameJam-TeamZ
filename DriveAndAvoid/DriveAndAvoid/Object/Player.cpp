@@ -57,7 +57,7 @@ void Player::Update()
 		if (bullet[bullet_count] == nullptr)
 		{
 			bullet_pos[bullet_count] = location;
-			bullet[bullet_count] = new Bullet(location);
+			bullet[bullet_count] = new Bullet(location + 20);
 			bullet_count++;
 
 		}
