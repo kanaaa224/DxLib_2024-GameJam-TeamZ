@@ -40,8 +40,6 @@ void Comment::Initialize()
 
 	// 当たり判定の大きさ設定
 	box_size = Vector2D(GetDrawFormatStringWidth(comment.c_str()), font_size);
-
-	SetFontSize(16);
 }
 
 void Comment::Update(float speed)
@@ -77,4 +75,9 @@ Vector2D Comment::GetLocation() const
 Vector2D Comment::GetBoxSize() const
 {
 	return box_size;
+}
+
+unsigned int Comment::GetFontColor() const
+{
+	return font_color;
 }
