@@ -15,6 +15,7 @@ private:
 	int barrier_image;   //バリア画像
 	int img_gameoverWindow;  // ゲームオーバー時のウィンドウ画像
 	int img_gameclearWindow; // ゲームクリア時のウィンドウ画像
+	int img_superChat;
 
 	int high_score;  //ハイスコア
 	int mileage;   //走行距離

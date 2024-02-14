@@ -4,7 +4,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr),img_superChat(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -36,6 +36,7 @@ void GameMainScene::Initialize()
 	img_gameoverWindow  = LoadGraph("Resource/images/gameover_window.png");
 	img_gameclearWindow = LoadGraph("Resource/images/gameclear_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
+	img_superChat = LoadGraph("resource/images/superChat1_sizedwon.png");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -168,7 +169,7 @@ eSceneType GameMainScene::Update()
 			{
 				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				comment[i]->Initialize();
-				comment_count++;
+				//comment_count++;
 				break;
 			}
 		}
@@ -187,7 +188,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -199,7 +200,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -214,12 +215,12 @@ eSceneType GameMainScene::Update()
 					}
 
 					player->SetActive(false);
-					player->DecreaseHP(-10.0f);
+					player->DecreaseHP(-1.0f);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
 					disp_hpbar = 60;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -236,7 +237,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 		}
@@ -264,7 +265,7 @@ eSceneType GameMainScene::Update()
 
 		if (disp_hpbar > 0) disp_hpbar--;
 
-		if (mileage % 100 == 0)
+		/*if (mileage % 100 == 0)
 		{
 			for (int i = 0; i < comment_count; i++)
 			{
@@ -284,7 +285,7 @@ eSceneType GameMainScene::Update()
 					color_num[i] = commentDatas[k].font_color;
 				}
 			}
-		}
+		}*/
 	}
 	return GetNowScene();
 }
@@ -363,6 +364,11 @@ void GameMainScene::Draw() const
 	DrawFormatString(260, 628, GetColor(0, 0, 0), "%.1f万人", player->GetHP());
 	DrawFormatString(310, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	DrawFormatString(270, 645, GetColor(0, 0, 0), "%08d", mileage / 10);
+	for (int i = 0; i < 5; i++)
+	{
+		DrawGraph(915, 90 + (i*120), img_superChat, TRUE);
+	}
+	
 	
 	//for (int i = 0; i < comment_count; i++)
 	//{
