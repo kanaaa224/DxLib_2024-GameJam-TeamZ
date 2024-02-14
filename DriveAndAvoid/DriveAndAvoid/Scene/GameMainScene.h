@@ -16,9 +16,9 @@ private:
 	int enemy_count[3];  //通り過ぎた敵カウント
 	Player* player;  //プレイヤー
 
-	Comment** comment; // 敵（コメント）
-	CommentData* commentDatas;
-	int commentDatas_num;
+	Comment** comment;         // コメント（敵）
+	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
+	int commentDatas_num;      // コメントのデータの数
 
 public:
 	GameMainScene();
