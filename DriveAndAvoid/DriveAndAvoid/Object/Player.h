@@ -40,7 +40,7 @@ public:
 	float GetSpped() const;  //‘¬‚³æ“¾ˆ—
 	float GetHP() const;  //‘Ì—Íæ“¾
 	bool HitBullet(Vector2D location, Vector2D size); //’e‚Ì“–‚½‚è”»’è
-
+	bool HitPlayer(Vector2D location, Vector2D size); //ƒvƒŒƒCƒ„[‚Ì“–‚½‚è”»’è
 private:
 	void Movement();  //ˆÚ“®ˆ—
 	void Acceleration();  //‰Á‘¬ˆ—
