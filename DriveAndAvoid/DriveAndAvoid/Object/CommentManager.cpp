@@ -3,14 +3,39 @@
 #include<math.h>
 
 #define FONT_SIZE 25.0f
+#define MAX_COMMENT_NUM 50//コメントの最大表示数
+
 
 CommentManager::CommentManager()
 {
 	SetFontSize(FONT_SIZE);
+
+	comment = new Comment * [MAX_COMMENT_NUM];
+
 	for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
-		comment[i] = { FALSE,0,0xffffff,0,0,Vector2D(0.0f,0.0f),Vector2D(0.0f,0.0f) };
+		comment[i] = nullptr;
 	}
+
+	//ランキングデータの読み込み
+	FILE* fp = nullptr;
+
+	//ファイルオープン
+	errno_t result = fopen_s(&fp, "Resource/dat/comment.csv", "r");
+
+	if (result != 0)
+	{
+		throw("Resource/dat/comment.csvが読み込めません\n");
+	}
+
+	//対象ファイルから読み込む
+	for (int i = 0; i < COMMENT_TYPE; i++)
+	{
+		fscanf_s(fp, "%50s", comments[i], 50);
+	}
+
+	//ファイルクローズ
+	fclose(fp);
 }
 
 CommentManager::~CommentManager()
@@ -18,28 +43,15 @@ CommentManager::~CommentManager()
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void CommentManager::Initialize()
-{
-}
-
-void CommentManager::Update(Player* player)
+void CommentManager::Update()
 {
 	CommentGenerate();
 
 	for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
-		if (comment[i].can_draw)
+		if (comment[i] != nullptr)
 		{
-			comment[i].color = 0xffffff;
-			if ((comment[i].location.x -= comment[i].speed) < -500)comment[i].can_draw = false;
-			if (player->HitPlayer(comment[i].location, comment[i].box_size))comment[i].can_draw = false;
-			if (player->HitBullet(comment[i].location, comment[i].box_size))
-			{
-				comment[i].color = 0xff0000;
-				if(--comment[i].hp <= 0)comment[i].can_draw = false;
-			}
+			comment[i]->Update();
 		}
 	}
 }
@@ -59,32 +71,40 @@ void CommentManager::Draw() const
 	}
 }
 
-void CommentManager::Fialize()
-{
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void CommentManager::CommentGenerate()
 {
-	if (GetRand(20) == 0)
+	if (GetRand(40) == 0)
 	{
 		SetFontSize(FONT_SIZE);
 
 		for (int i = 0; i < MAX_COMMENT_NUM; i++)
 		{
-			if (!comment[i].can_draw)
+			if (comment[i] == nullptr)
 			{
-				comment[i].can_draw = true;
-				comment[i].hp = 5;
-				comment[i].color = 0xffffff;
-				comment[i].type = GetRand(COMMENT_TYPE - 1);
-				comment[i].speed = (float)(GetDrawFormatStringWidth(comments[comment[i].type]) / 80) + 1;
-				comment[i].location = Vector2D(1500.0f + GetRand(500), GetRand(19) * FONT_SIZE + 3);
-				comment[i].box_size = Vector2D(GetDrawFormatStringWidth(comments[comment[i].type]), FONT_SIZE);
-				break;
+				comment[i] = new Comment(comments[GetRand(COMMENT_TYPE)], FONT_SIZE);
 			}
 		}
 	}
+}
+
+bool CommentManager::HitComment(Collider* collider, bool can_delete)
+{
+	bool is_hit = false;
+	for (int i = 0; i < MAX_COMMENT_NUM; i++)
+	{
+		if (comment[i] != nullptr)
+		{
+			if (comment[i]->Hit(collider))
+			{
+				is_hit = true;
+				if (can_delete)
+				{
+					delete comment[i];
+					comment[i] = nullptr;
+				}
+				else break;
+			}
+		}
+	}
+	return is_hit;
 }

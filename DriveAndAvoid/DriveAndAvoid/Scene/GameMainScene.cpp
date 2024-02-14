@@ -3,13 +3,8 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), mileage(0), player(nullptr)
 {
-	for (int i = 0; i < 3; i++)
-	{
-		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
-	}
 }
 
 GameMainScene::~GameMainScene()
@@ -26,34 +21,9 @@ void GameMainScene::Initialize()
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/images/background.png");
 	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
-	barrier_image = LoadGraph("Resource/images/barrier.png");
-	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
+	LoadGraph("Resource/images/barrier.png");
 
-	//エラーチェック
-	if (back_ground == -1)
-	{
-		throw("Resource/images/back.bmpがありません\n");
-	}
-	if (result == -1)
-	{
-		throw("Resource/images/car.bmpがありません\n");
-	}
-	if (barrier_image == -1)
-	{
-		throw("Resource/images/barrier.pngがありません\n");
-	}
-
-	//オブジェクトの生成
-	player = new Player;
-	enemy = new Enemy * [10];
-
-	//オブジェクトの初期化
-	player->Initialize();
-
-	for (int i = 0; i < 10; i++)
-	{
-		enemy[i] = nullptr;
-	}
+	player = new Player();
 }
 
 //更新処理
@@ -68,47 +38,6 @@ eSceneType GameMainScene::Update()
 	//コメント管理（神里が追加しました）
 	comment_manager.Update(player);
 
-	//敵生成処理
-	if (mileage / 20 % 100 == 0)
-	{
-		for (int i = 0; i < 10; i++)
-		{
-			if (enemy[i] == nullptr)
-			{
-				int type = GetRand(3) % 3;
-				enemy[i] = new Enemy(type, 16, 0xffffff, "こんにちは");
-				enemy[i]->Initialize();
-				break;
-			}
-		}
-	}
-
-	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Update(player->GetSpped());
-
-			//画面外に行ったら、敵を削除してスコア加算
-			if (enemy[i]->GetLocation().y >= 640.0f)
-			{
-				enemy_count[enemy[i]->GetType()]++;
-				enemy[i]->Fialize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
-
-			//当たり判定の確認
-			if (player->HitPlayer(enemy[i]->GetLocation(),enemy[i]->GetBoxSize()))
-			{
-				enemy[i]->Fialize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
-		}
-	}
-
 	return GetNowScene();
 }
 
@@ -121,15 +50,6 @@ void GameMainScene::Draw() const
 
 	//コメント描画（神里が追加しました）
 	comment_manager.Draw();
-
-	//敵の描画
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Draw();
-		}
-	}
 
 	//プレイヤーの描画
 	player->Draw();
@@ -167,8 +87,8 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHp());
-	DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	//DrawFormatStringF(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHp());
+	//DrawFormatStringF(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
 
@@ -177,11 +97,7 @@ void GameMainScene::Finalize()
 {
 	//スコアを計算する
 	int score = (mileage / 10 * 10);
-	for (int i = 0; i < 3; i++)
-	{
-		score += (i + 1) * 50 * enemy_count[i];
-	}
-
+	
 	//リザルトデータの書き込み
 	FILE* fp = nullptr;
 	//ファイルオープン
@@ -196,30 +112,11 @@ void GameMainScene::Finalize()
 	//スコア保存
 	fprintf(fp, "%d,\n", score);
 
-	//避けた数と得点を保存
-	for (int i = 0; i < 3; i++)
-	{
-		fprintf(fp, "%d,\n", enemy_count[i]);
-	}
-
 	//ファイルクローズ
 	fclose(fp);
 
 	//動的確保したオブジェクトを削除する
-	player->Finalize();
 	delete player;
-
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Fialize();
-			delete enemy[i];
-			enemy[i] = nullptr;
-		}
-	}
-
-	delete[] enemy;
 }
 
 //現在のシーン情報を取得
