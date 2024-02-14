@@ -112,9 +112,6 @@ eSceneType GameMainScene::Update()
 				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				comment[i]->Initialize();
 				comment_count++;
-
-				text[i] = comment[i]->GetComment();
-
 				break;
 			}
 		}
@@ -164,12 +161,14 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-	for (int i = 0; i < 100; i++)
+	// ƒXƒpƒ`ƒƒ
+	for (int i = 0; i < commentDatas_num; i++)
 	{
+		//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
 		int k = i;
 		if (comment[i] != nullptr)
 		{
-			text[i] = comment[i]->GetComment();
+			text[i] = commentDatas[i].comment.c_str();
 		}
 		else
 		{
@@ -177,7 +176,7 @@ eSceneType GameMainScene::Update()
 			{
 				k++;
 			}
-			if(k<100) text[i] = comment[k]->GetComment();
+			if (k < 100) text[i] = commentDatas[k].comment.c_str();
 		}
 	}
 
