@@ -20,9 +20,8 @@ void Enemy::Update()
 //ï`âÊèàóù
 void Enemy::Draw()
 {
-	//DrawGraph(location.x, location.y, image_handle, true);
+	DrawRotaGraph(location.x + (box_size.x / 2), location.y + (box_size.y / 2), 0.2, 0, image_handle, true);
 	DrawBox(location.x, location.y, location.x + box_size.x, location.y + box_size.y, 0xffffff, false);
-	DrawString(location.x, location.y, "ìG", 0xffffff);
 }
 
 Vector2D Enemy::GetLocation() const

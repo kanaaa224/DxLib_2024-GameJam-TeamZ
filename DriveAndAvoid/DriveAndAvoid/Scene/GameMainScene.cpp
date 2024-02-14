@@ -31,7 +31,7 @@ void GameMainScene::Initialize()
 	back_ground = LoadGraph("Resource/images/background.png");
 	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
-	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
+	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -120,14 +120,14 @@ eSceneType GameMainScene::Update()
 	//エネミーの処理
 	
 	bool can_spawn_enemy = false;
-	if (GetRand(100) == 0)can_spawn_enemy = TRUE;
+	if (GetRand(100) == 0)can_spawn_enemy = true;
 
 	for (int i = 0; i < 10; i++)
 	{
 		if (enemy[i] != nullptr)
 		{
 			enemy[i]->Update();
-			if (enemy[i]->GetLocation().x < -100)
+			if ((enemy[i]->GetLocation().x < -100) || player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
 			{
 				delete enemy[i];
 				enemy[i] = nullptr;
@@ -135,7 +135,8 @@ eSceneType GameMainScene::Update()
 		}
 		else if (can_spawn_enemy)
 		{
-			enemy[i] = new Enemy(NULL, 1);
+			int type = GetRand(2);
+			enemy[i] = new Enemy(enemy_image[type], type);
 			can_spawn_enemy = false;
 		}
 	}
@@ -353,6 +354,17 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
+	//敵キャラの消去
+	for (int i = 0; i < 10; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			delete enemy[i];
+			enemy[i] = nullptr;
+		}
+	}
+
+	delete[] enemy;
 
 	// コメント（敵）の削除
 
@@ -367,6 +379,11 @@ void GameMainScene::Finalize()
 	}
 
 	delete[] comment;
+
+	for (int i = 0; i < 3; i++)
+	{
+		DeleteGraph(enemy_image[i]);
+	}
 }
 
 //現在のシーン情報を取得
