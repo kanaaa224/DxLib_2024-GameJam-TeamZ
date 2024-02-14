@@ -121,7 +121,7 @@ eSceneType GameMainScene::Update()
 
 	if (isGameover)
 	{
-		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT;
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RANKING_DISP; // E_RESULT
 		//return;
 	}
 	else {
