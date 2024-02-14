@@ -18,6 +18,7 @@ private:
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
 	const char *text[BUFFER];	//コメント表示
+	unsigned int color_num[BUFFER];
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
 

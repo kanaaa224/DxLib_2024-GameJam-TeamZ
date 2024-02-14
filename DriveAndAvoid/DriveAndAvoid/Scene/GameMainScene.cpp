@@ -13,6 +13,7 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 	for (int i = 0; i < BUFFER; i++)
 	{
 		text[i] = 0;
+		color_num[i] = 0xffffff;
 	}
 }
 
@@ -170,23 +171,23 @@ eSceneType GameMainScene::Update()
 	}
 
 	// スパチャ
-	for (int i = 0; i < commentDatas_num; i++)
-	{
-		//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
-		int k = i;
-		if (comment[i] != nullptr)
-		{
-			text[i] = commentDatas[i].comment.c_str();
-		}
-		else
-		{
-			while (comment[k] == nullptr)
-			{
-				k++;
-			}
-			if (k < 100) text[i] = commentDatas[k].comment.c_str();
-		}
-	}
+	//for (int i = 0; i < commentDatas_num; i++)
+	//{
+	//	//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
+	//	int k = i;
+	//	if (comment[i] != nullptr)
+	//	{
+	//		if(GetRand(100) == 0)text[i] = commentDatas[i].comment.c_str();
+	//	}
+	//	else
+	//	{
+	//		while (comment[k] == nullptr)
+	//		{
+	//			k++;
+	//		}
+	//		if (k < BUFFER) text[i] = commentDatas[k].comment.c_str();
+	//	}
+	//}
 
 	//プレイヤーの体力が0未満なら、リザルトに遷移する
 	if ( player->GetHP() <= 0.0f)
@@ -195,6 +196,28 @@ eSceneType GameMainScene::Update()
 	}
 
 	if (disp_hpbar > 0) disp_hpbar--;
+
+	if (mileage % 100 == 0)
+	{
+		for (int i = 0; i < comment_count; i++)
+		{
+			int k = GetRand(100) + 1;
+			if (comment[k] != nullptr)
+			{
+				text[i] = commentDatas[k].comment.c_str();
+				color_num[i] = commentDatas[k].font_color;
+			}
+			else
+			{
+				while (comment[k] == nullptr)
+				{
+					k++;
+				}
+				text[i] = commentDatas[k].comment.c_str();
+				color_num[i] = commentDatas[k].font_color;
+			}
+		}
+	}
 
 	return GetNowScene();
 }
@@ -262,15 +285,17 @@ void GameMainScene::Draw() const
 	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
-	for (int i = 0; i < comment_count ; i++)
+	
+	for (int i = 0; i < comment_count; i++)
 	{
-			if (140 + (i * 65) <= 600)
-			{
-				DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-				DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff2510, TRUE);
-				DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
-			}
+		if (140 + (i * 65) <= 600)
+		{
+			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), color_num[i], TRUE);
+			DrawFormatString(895, 110 + (i * 65), 0x000000, "%s", text[i]);
+		}
 	}
+
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
 	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
