@@ -49,7 +49,7 @@ eSceneType ResultScene::Update()
 	//Bボタンでランキングに遷移する
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
-		return eSceneType::E_RANKING_INPUT;
+		return eSceneType::E_TITLE;
 	}
 
 	return GetNowScene();

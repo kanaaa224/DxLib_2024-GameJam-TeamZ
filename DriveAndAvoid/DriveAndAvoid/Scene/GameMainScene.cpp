@@ -157,7 +157,7 @@ eSceneType GameMainScene::Update()
 			if (enemy[i] != nullptr)
 			{
 				enemy[i]->Update();
-				if ((enemy[i]->GetLocation().x < -100) || player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
+				if ((enemy[i]->GetLocation().x < -100))   //敵が画面外に出ると消す
 				{
 					delete enemy[i];
 					enemy[i] = nullptr;
@@ -191,10 +191,27 @@ eSceneType GameMainScene::Update()
 		{
 			if (enemy[i] != nullptr)
 			{
-				if (player->HitPlayer(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
+				if (player->HitPlayer(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))  //プレイヤーと敵の当たり判定
 				{
+					if (comment[i]->GetFontColor() == 0x00ffff) {
+						// 回復
+						player->DecreaseHP(2);
+					}
+
+					player->SetActive(false);
+					player->DecreaseHP(-1.0f);
+
 					delete enemy[i];
 					enemy[i]=nullptr;
+					break_count++;
+				}
+			}
+			if (enemy[i] != nullptr)   
+			{
+				if (player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))    //弾と敵の当たり判定
+				{
+					delete enemy[i];
+					enemy[i] = nullptr;
 					break_count++;
 				}
 			}
@@ -311,6 +328,10 @@ eSceneType GameMainScene::Update()
 				}
 			}
 		}*/
+		if (break_count >= 5)
+		{
+			isGameclear = true;
+		}
 	}
 	return GetNowScene();
 }
@@ -389,9 +410,10 @@ void GameMainScene::Draw() const
 	DrawFormatString(260, 628, GetColor(0, 0, 0), "%.1f万人", player->GetHP());
 	DrawFormatString(310, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	DrawFormatString(270, 645, GetColor(0, 0, 0), "%08d", mileage / 10);
-	for (int i = 0; i < 5; i++)
+	
+	for (int i = 0; i < break_count; i++)
 	{
-		DrawGraph(915, 90 + (i*120), img_superChat, TRUE);
+		DrawGraph(915, 90 + (i * 120), img_superChat, TRUE);
 	}
 	
 	
@@ -494,6 +516,7 @@ void GameMainScene::Finalize()
 
 	delete[] commentDatas;
 	commentDatas = nullptr;
+
 }
 
 //現在のシーン情報を取得
