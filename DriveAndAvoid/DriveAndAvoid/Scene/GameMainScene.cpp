@@ -80,8 +80,10 @@ void GameMainScene::Initialize()
 		commentDatas_num++;
 		commentDatas[commentDatas_num] = commentData;
 	}
+	
+	int buffer = commentDatas_num;
 
-	for (int i = 0; i < 1980; i++) {
+	for (int i = 0; i < BUFFER - buffer; i++) {
 		commentDatas_num++;
 		commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
 	}
