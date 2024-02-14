@@ -3,7 +3,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-ResultScene::ResultScene() :back_ground(NULL), score(0)
+ResultScene::ResultScene() :back_ground(NULL), score(0), image(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -22,12 +22,17 @@ void ResultScene::Initialize()
 {
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/images/background.png");
+	image = LoadGraph("Resource/images/GameMainScene Image.png");
 	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
 
 	//エラーチェック
 	if (back_ground == -1)
 	{
 		throw("Resource/images/back.bmpがありません\n");
+	}
+	if (image == -1)
+	{
+		throw("Resource/images/GameMainScene Image.pngがありません\n");
 	}
 	if (result == -1)
 	{
@@ -55,6 +60,7 @@ void ResultScene::Draw() const
 {
 	//背景画像を描画
 	DrawGraph(0, 0, back_ground, TRUE);
+	DrawGraph(0, 0, image, TRUE);
 
 	//スコア等表示領域
 	DrawBox(150, 150, 490, 330, GetColor(0, 153, 0), TRUE);

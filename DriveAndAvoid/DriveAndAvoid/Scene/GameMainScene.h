@@ -15,7 +15,6 @@ private:
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
-	int comment_color[100]; //コメントの色
 	const char *text[100];	//コメント表示
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー

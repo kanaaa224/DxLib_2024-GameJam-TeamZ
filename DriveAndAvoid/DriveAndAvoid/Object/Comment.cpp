@@ -22,7 +22,7 @@ void Comment::Initialize()
 	int canvas_x_size = 860;
 	int canvas_y_size = 480;
 
-	int max_y_grid = round(canvas_y_size/ font_size); // y 軸方向の最大割り当て数
+	int max_y_grid = round(canvas_y_size/ font_size) - 1; // y 軸方向の最大割り当て数
 
 	if (type >= 0)
 	{

@@ -259,8 +259,8 @@ void GameMainScene::Draw() const
 		if (140 + (i * 65) <= 600)
 		{
 			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), comment_color[i], TRUE);
-			DrawFormatString(890, 110 + (i * 65), 0x000000, "%s", text[i]);
+			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff0000, TRUE);
+			DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
 		}
 	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
