@@ -225,10 +225,10 @@ void GameMainScene::Draw() const
 	if (disp_hpbar > 0)
 	{
 		Vector2D HPbar = player->GetLocation();
-		DrawBoxAA(HPbar.x - 50, HPbar.y - 30, HPbar.x + 50, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
+		DrawBoxAA(HPbar.x, HPbar.y - 30, HPbar.x + 110, HPbar.y - 20, 0xffffff, 0.2f, FALSE);
 		for (int i = 0; i < player->GetHP(); i++)
 		{
-			DrawBoxAA(HPbar.x - (48 - i * 2), HPbar.y - 28, HPbar.x - (45 - i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
+			DrawBoxAA(HPbar.x + (2 + i * 2), HPbar.y - 28, HPbar.x + (4 + i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
 		}
 	}
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
