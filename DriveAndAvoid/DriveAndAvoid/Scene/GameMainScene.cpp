@@ -141,7 +141,7 @@ eSceneType GameMainScene::Update()
 			if (player->HitPlayer(comment[i]->GetLocation(),comment[i]->GetBoxSize()))
 			{
 				player->SetActive(false);
-				player->DecreaseHP(-5.0f);
+				player->DecreaseHP(-0.5f);
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
@@ -250,7 +250,7 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.0f万人", player->GetHP());
+	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.1f万人", player->GetHP());
 	DrawFormatString(280, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);

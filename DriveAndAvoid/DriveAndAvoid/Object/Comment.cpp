@@ -20,7 +20,7 @@ void Comment::Initialize()
 	int margin_left = 25; // x 軸方向の左マージン
 
 	int canvas_x_size = 860;
-	int canvas_y_size = 480;
+	int canvas_y_size = 484;
 
 	int max_y_grid = round(canvas_y_size/ font_size) - 1; // y 軸方向の最大割り当て数
 
