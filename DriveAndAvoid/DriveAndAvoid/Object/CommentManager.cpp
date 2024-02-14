@@ -43,7 +43,7 @@ CommentManager::~CommentManager()
 
 }
 
-void CommentManager::Update()
+void CommentManager::Update(Player* player)
 {
 	CommentGenerate();
 

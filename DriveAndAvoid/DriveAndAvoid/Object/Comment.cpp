@@ -25,6 +25,6 @@ void Comment::Draw()const
 
 int Comment::HitBullet()
 {
-	hp--;
 	color = 0xff0000;
+	return --hp;
 }

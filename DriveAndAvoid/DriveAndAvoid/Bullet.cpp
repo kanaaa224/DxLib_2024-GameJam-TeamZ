@@ -20,15 +20,6 @@ void Bullet::Update()
 
 void Bullet::Draw() const
 {
-	DrawCircle(location.x, location.y, size, 0xFFFFFF, TRUE);
-}
-
-Vector2D Bullet::Bullet::GetLocation()
-{
-	return location;
-}
-
-bool Bullet::Hit(Vector2D location, Vector2D size)
-{
-	
+	//DrawCircle(location.x, location.y, size, 0xFFFFFF, TRUE);
+	DrawBox(location.x, location.y, location.x + size, location.x + size, 0xffffff, TRUE);
 }
