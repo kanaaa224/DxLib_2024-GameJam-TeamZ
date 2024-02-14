@@ -77,6 +77,11 @@ Vector2D Comment::GetBoxSize() const
 	return box_size;
 }
 
+int Comment::GetFontColor()
+{
+	return font_color;
+}
+
 const char *Comment::GetComment()
 {
 	return comment;

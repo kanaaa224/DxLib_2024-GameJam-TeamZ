@@ -26,6 +26,7 @@ public:
 	Vector2D GetLocation() const; // 位置情報の取得
 	Vector2D GetBoxSize() const;  // 当たり判定の大きさを取得
 
+	int GetFontColor();		//コメントカラー取得
 	const char* GetComment();		  //コメント内容取得
 };
 

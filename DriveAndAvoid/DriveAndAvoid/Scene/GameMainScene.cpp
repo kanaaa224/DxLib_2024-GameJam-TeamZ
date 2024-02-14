@@ -125,6 +125,7 @@ eSceneType GameMainScene::Update()
 				else            comment[i] = new Comment(type, 16, 0xffffff, "こんにちは");
 				//comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				text[i] = comment[i]->GetComment();
+				comment_color[i] = comment[i]->GetFontColor();
 				comment[i]->Initialize();
 				comment_count++;
 				break;
@@ -172,6 +173,7 @@ eSceneType GameMainScene::Update()
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
+				comment_count--;
 			}
 		}
 	}
@@ -182,6 +184,7 @@ eSceneType GameMainScene::Update()
 		if (comment[i] != nullptr)
 		{
 			text[i] = comment[i]->GetComment();
+			comment_color[i] = comment[i]->GetFontColor();
 		}
 		else
 		{
@@ -189,12 +192,12 @@ eSceneType GameMainScene::Update()
 			{
 				k++;
 			}
-			if(k<100) text[i] = comment[k]->GetComment();
+			if(k<100) text[i] = comment[k]->GetComment() , comment_color[i]=comment[k]->GetFontColor();
 		}
 	}
 
 	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHP() <= 0.0f)
+	if (player->GetHP() <= 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
@@ -232,7 +235,6 @@ void GameMainScene::Draw() const
 		}
 	}
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
-	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	SetFontSize(15);
 	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	//DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
@@ -269,12 +271,12 @@ void GameMainScene::Draw() const
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
 	for (int i = 0; i < comment_count ; i++)
 	{
-			if (140 + (i * 65) <= 600)
-			{
-				DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-				DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff2510, TRUE);
-				DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
-			}
+		if (140 + (i * 65) <= 600)
+		{
+			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), comment_color[i], TRUE);
+			DrawFormatString(890, 110 + (i * 65), 0x000000, "%s", text[i]);
+		}
 	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 }
