@@ -29,6 +29,7 @@ private:
 	bool bullet_flg; //バレットが生成されているか？
 	int count;   //点滅用カウント
 	AnimPlayer now_anim; //現在のアニメーション
+	int delay;  //遅延
 	
 public:
 	Player();
