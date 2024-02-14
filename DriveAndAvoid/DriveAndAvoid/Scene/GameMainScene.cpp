@@ -285,9 +285,8 @@ eSceneType GameMainScene::Update()
 				}
 			}
 		}
-
-		return GetNowScene();
 	}
+	return GetNowScene();
 }
 
 //•`‰æˆ—
