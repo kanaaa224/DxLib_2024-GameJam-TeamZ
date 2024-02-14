@@ -1,9 +1,10 @@
 #include"GameMainScene.h"
+#include"../Utility/InputControl.h"
 #include"../Object/RankingData.h"
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), disp_hpbar(0),enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), disp_hpbar(0),enemy(nullptr)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -31,6 +32,7 @@ void GameMainScene::Initialize()
 	back_ground = LoadGraph("Resource/images/background.png");
 	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
+	img_gameoverWindow = LoadGraph("Resource/images/gameover_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 
 	//エラーチェック
@@ -106,45 +108,57 @@ void GameMainScene::Initialize()
 	{
 		enemy[i] = nullptr;
 	}
+
+
+	isGameover = false;
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-	//プレイヤーの更新
-	player->Update();
+	// プレイヤーの体力が0未満ならゲームオーバー
+	if (player->GetHP() <= 0.0f) isGameover = true;
 
-	//移動距離の更新
-	mileage++;
-
-	//エネミーの処理
-	
-	bool can_spawn_enemy = false;
-	if (GetRand(100) == 0)can_spawn_enemy = true;
-
-	for (int i = 0; i < 10; i++)
+	if (isGameover)
 	{
-		if (enemy[i] != nullptr)
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RANKING_DISP; // E_RESULT
+		//return;
+	}
+	else {
+		//プレイヤーの更新
+		player->Update();
+
+		//移動距離の更新
+		mileage++;
+
+		//エネミーの処理
+
+		bool can_spawn_enemy = false;
+		if (GetRand(100) == 0)can_spawn_enemy = true;
+
+		for (int i = 0; i < 10; i++)
 		{
-			enemy[i]->Update();
-			if ((enemy[i]->GetLocation().x < -100) || player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
+			if (enemy[i] != nullptr)
 			{
-				delete enemy[i];
-				enemy[i] = nullptr;
+				enemy[i]->Update();
+				if ((enemy[i]->GetLocation().x < -100) || player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
+				{
+					delete enemy[i];
+					enemy[i] = nullptr;
+				}
+			}
+			else if (can_spawn_enemy)
+			{
+				int type = GetRand(2);
+				enemy[i] = new Enemy(enemy_image[type], type);
+				can_spawn_enemy = false;
 			}
 		}
-		else if (can_spawn_enemy)
-		{
-			int type = GetRand(2);
-			enemy[i] = new Enemy(enemy_image[type], type);
-			can_spawn_enemy = false;
-		}
-	}
 
 
-	// コメント（敵）生成処理
-	//if (mileage / 20 % 100 == 0)
-	//{
+		// コメント（敵）生成処理
+		//if (mileage / 20 % 100 == 0)
+		//{
 		for (int i = 0; i < commentDatas_num; i++)
 		{
 			if (comment[i] == nullptr)
@@ -155,100 +169,95 @@ eSceneType GameMainScene::Update()
 				break;
 			}
 		}
-	//}
+		//}
 
-	// コメント（敵）の更新と当たり判定チェック
-	for (int i = 0; i < commentDatas_num; i++)
-	{
-		if (comment[i] != nullptr) comment[i]->Update(player->GetSpped());
-
-		// 画面外に行ったら、敵を削除してスコア加算
-		if (comment[i] != nullptr)
+		// コメント（敵）の更新と当たり判定チェック
+		for (int i = 0; i < commentDatas_num; i++)
 		{
-			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
-			{
-				enemy_count[comment[i]->GetType()]++;
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				comment_count--;
-			}
-		}
+			if (comment[i] != nullptr) comment[i]->Update(player->GetSpped());
 
-		// 赤コメントはしばらくして消す
-		if (comment[i] != nullptr)
-		{
-			if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
+			// 画面外に行ったら、敵を削除してスコア加算
+			if (comment[i] != nullptr)
 			{
-				enemy_count[comment[i]->GetType()]++;
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				comment_count--;
-			}
-		}
-
-		// 当たり判定の確認
-		if (comment[i] != nullptr)
-		{
-			if (player->HitPlayer(comment[i]->GetLocation(),comment[i]->GetBoxSize()))
-			{
-				if (comment[i]->GetFontColor() == 0x00ffff) {
-					// 回復
+				if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
+				{
+					enemy_count[comment[i]->GetType()]++;
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					comment_count--;
 				}
-				
-				player->SetActive(false);
-				player->DecreaseHP(-5.0f);
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				disp_hpbar = 60;
-				comment_count--;
 			}
-		}
 
-		// 弾ヒット
-		if (comment[i] != nullptr)
-		{
-			if (player->HitBullet(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
+			// 赤コメントはしばらくして消す
+			if (comment[i] != nullptr)
 			{
-				if (comment[i]->GetFontColor() == 0x00ffff) {
-					// 回復
+				if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
+				{
+					enemy_count[comment[i]->GetType()]++;
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					comment_count--;
 				}
-
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
 			}
-		}
-	}
 
-	// スパチャ
-	for (int i = 0; i < commentDatas_num; i++)
-	{
-		//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
-		int k = i;
-		if (comment[i] != nullptr)
-		{
-			text[i] = commentDatas[i].comment.c_str();
-		}
-		else
-		{
-			while (comment[k] == nullptr)
+			// 当たり判定の確認
+			if (comment[i] != nullptr)
 			{
-				k++;
+				if (player->HitPlayer(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
+				{
+					if (comment[i]->GetFontColor() == 0x00ffff) {
+						// 回復
+					}
+
+					player->SetActive(false);
+					player->DecreaseHP(-5.0f);
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					disp_hpbar = 60;
+					comment_count--;
+				}
 			}
-			if (k < 100) text[i] = commentDatas[k].comment.c_str();
+
+			// 弾ヒット
+			if (comment[i] != nullptr)
+			{
+				if (player->HitBullet(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
+				{
+					if (comment[i]->GetFontColor() == 0x00ffff) {
+						// 回復
+					}
+
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+				}
+			}
 		}
-	}
 
-	//プレイヤーの体力が0未満なら、リザルトに遷移する
-	if (player->GetHP() <= 0.0f)
-	{
-		//return eSceneType::E_RESULT;
-	}
+		// スパチャ
+		for (int i = 0; i < commentDatas_num; i++)
+		{
+			//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
+			int k = i;
+			if (comment[i] != nullptr)
+			{
+				text[i] = commentDatas[i].comment.c_str();
+			}
+			else
+			{
+				while (comment[k] == nullptr)
+				{
+					k++;
+				}
+				if (k < 100) text[i] = commentDatas[k].comment.c_str();
+			}
+		}
 
-	if (disp_hpbar > 0) disp_hpbar--;
+		if (disp_hpbar > 0) disp_hpbar--;
+	}
 
 	return GetNowScene();
 }
@@ -339,6 +348,19 @@ void GameMainScene::Draw() const
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
 	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
+
+	// ゲームオーバー時のアカウント凍結メッセージ
+	if (isGameover)
+	{
+		int screenWidth  = 1280;
+		int screenHeight = 720;
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+		DrawBox(0, 0, screenWidth, screenHeight, 0x000000, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+		DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameoverWindow, true);
+	}
 }
 
 //終了時処理

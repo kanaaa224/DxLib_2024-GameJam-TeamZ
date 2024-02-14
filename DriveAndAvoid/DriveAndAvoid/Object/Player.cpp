@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0),bullet_flg(true)
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0),bullet_flg(true),delay(0)
 {
 
 }
@@ -25,6 +25,7 @@ void Player::Initialize()
 	bullet_count = 0;
 	bullet_flg = true;
 	bullet = new Bullet * [20];
+	delay = 0;
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -34,17 +35,27 @@ void Player::Initialize()
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/jet.png");
+	fire_image01 = LoadGraph("Resource/images/fire01.png");
+	fire_image02 = LoadGraph("Resource/images/fire02.png");
 
 	//エラーチェック
 	if (image == -1)
 	{
 		throw("Resource/images/car1pol.bmpがありません\n");
 	}
-}
+	if (fire_image01 == -1)
+	{
+		throw("Resource/images/fire01.pngがありません\n");
+	}
+	if (fire_image02 == -1)
+	{
+		throw("Resource/images/fire02.pngがありません\n");
+	}}
 
 //更新処理
 void Player::Update()
 {
+	delay++;
 
 	if (bullet_count >= 20)
 	{
@@ -52,14 +63,14 @@ void Player::Update()
 	}
 
 	//弾生成処理処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && bullet_count < 20)
+	if (InputControl::GetButton(XINPUT_BUTTON_B) && bullet_count < 20 && delay > 10)
 	{
 		if (bullet[bullet_count] == nullptr)
 		{
 			bullet_pos[bullet_count] = location;
-			bullet[bullet_count] = new Bullet(location);
+			bullet[bullet_count] = new Bullet(location+30);
 			bullet_count++;
-
+			delay = 0;
 		}
 	}
 
@@ -106,12 +117,44 @@ void Player::Draw()
 {
 	if (!is_active)
 	{
-		if (count % 5 == 0)DrawGraphF(location.x, location.y, image, TRUE);
+		if (count % 5 == 0)
+		{
+			//プレイヤー画像の描画
+			DrawGraphF(location.x, location.y, image, TRUE);
+
+			//炎の画像の切り替え
+			if (now_anim == AnimPlayer::FIRE01)
+			{
+				DrawRotaGraph(location.x - 5, location.y + 23, 1.0, 11, fire_image01, TRUE);
+			}
+			if (now_anim == AnimPlayer::FIRE02)
+			{
+				DrawRotaGraph(location.x, location.y + 23, 0.75, 11, fire_image01, TRUE);
+			}
+			if (now_anim == AnimPlayer::FIRE03)
+			{
+				DrawRotaGraph(location.x - 5, location.y + 23, 1.0, 11, fire_image02, TRUE);
+			}
+		}
 	}
 	if(is_active)
 	{
 		//プレイヤー画像の描画
 		DrawGraphF(location.x, location.y, image, TRUE);
+
+		//炎の画像の切り替え
+		if (now_anim == AnimPlayer::FIRE01)
+		{
+			DrawRotaGraph(location.x - 5, location.y + 23, 1.0, 11, fire_image01, TRUE);
+		}
+		if (now_anim == AnimPlayer::FIRE02)
+		{
+			DrawRotaGraph(location.x, location.y + 23, 0.75, 11, fire_image01, TRUE);
+		}
+		if (now_anim == AnimPlayer::FIRE03)
+		{
+			DrawRotaGraph(location.x - 5, location.y + 23, 1.0, 11, fire_image02, TRUE);
+		}
 	}
 
 	for (int i=0; i < 20; i++)
@@ -196,12 +239,12 @@ void Player::Movement()
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
 		move += Vector2D(-3.0f, 0.0f);
-		
+		ChangeAnim(FIRE02);
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		move += Vector2D(3.0f, 0.0f);
-		
+		ChangeAnim(FIRE03);
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
@@ -211,14 +254,19 @@ void Player::Movement()
 	{
 		move += Vector2D(0.0f, 3.0f);
 	}
+	if (move.x == 0.0f)
+	{
+		ChangeAnim(FIRE01);
+	}
 
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 1000.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 550.0f - box_size.y))
+	if ((location.x < box_size.x-100) || (location.x >= 1000.0f - 240.0f) || (location.y < box_size.y) || (location.y >= 500.0f - box_size.y))
 	{
 		location -= move;
 	}
+
 }
 
 //加速処理
@@ -280,4 +328,9 @@ bool Player::HitPlayer(Vector2D location, Vector2D size)
 bool Player::GetActive()
 {
 	return is_active;
+}
+
+void Player::ChangeAnim(AnimPlayer anim)
+{
+	now_anim = anim;
 }
