@@ -130,7 +130,7 @@ eSceneType GameMainScene::Update()
 			comment[i]->Update(player->GetSpped());
 
 			// 画面外に行ったら、敵を削除してスコア加算
-			if (comment[i]->GetLocation().x <= 0.0f)
+			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
 			{
 				enemy_count[comment[i]->GetType()]++;
 				comment[i]->Fialize();
