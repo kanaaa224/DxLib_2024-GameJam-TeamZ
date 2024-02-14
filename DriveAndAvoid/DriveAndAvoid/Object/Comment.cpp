@@ -22,7 +22,7 @@ void Comment::Initialize()
 	int canvas_x_size = 860;
 	int canvas_y_size = 484;
 
-	int max_y_grid = round(canvas_y_size / font_size); // y 軸方向の最大割り当て数
+	int max_y_grid = round(canvas_y_size / font_size) - 1; // y 軸方向の最大割り当て数
 
 	if (type >= 0)
 	{
@@ -49,7 +49,7 @@ void Comment::Update(float speed)
 
 void Comment::Draw() const
 {
-	SetFontSize(font_size);
+	//SetFontSize(font_size);
 	DrawFormatString(location.x, location.y, font_color, comment.c_str());
 
 	//DrawBox(location.x, location.y, location.x + GetDrawFormatStringWidth(comment), location.y + font_size, 0xffffff, false);
@@ -75,4 +75,9 @@ Vector2D Comment::GetLocation() const
 Vector2D Comment::GetBoxSize() const
 {
 	return box_size;
+}
+
+unsigned int Comment::GetFontColor() const
+{
+	return font_color;
 }

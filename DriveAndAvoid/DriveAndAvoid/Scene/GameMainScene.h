@@ -1,8 +1,11 @@
 #pragma once
 
 #include"SceneBase.h"
+#include"../Object/Enemy.h"
 #include"../Object/Player.h"
 #include"../Object/Comment.h"
+
+#define BUFFER 2000
 
 class GameMainScene :public SceneBase
 {
@@ -15,12 +18,13 @@ private:
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
-	const char *text[100];	//コメント表示
+	const char *text[BUFFER];	//コメント表示
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
 
 	Comment** comment;         // コメント（敵）
 	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
+	Enemy** enemy;//敵キャラ
 	int commentDatas_num;      // コメントのデータの数
 
 public:
