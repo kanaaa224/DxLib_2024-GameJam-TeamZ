@@ -258,6 +258,11 @@ bool Player::HitBullet(Vector2D location, Vector2D size)
 
 bool Player::HitPlayer(Vector2D location, Vector2D size)
 {
+	if (!is_active)
+	{
+		return false;
+	}
+
 	float sx1 = this->location.x;
 	float sx2 = this->location.x + this->box_size.x;
 	float sy1 = this->location.y ;
@@ -270,7 +275,7 @@ bool Player::HitPlayer(Vector2D location, Vector2D size)
 	if (sx1 < dx2 && dx1 < sx2 && sy1 < dy2 && dy1 < sy2)return TRUE;
 	return FALSE;
 }
-}
+
 
 bool Player::GetActive()
 {
