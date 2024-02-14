@@ -5,7 +5,7 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr),img_superChat(NULL), break_count(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -28,7 +28,8 @@ GameMainScene::~GameMainScene()
 void GameMainScene::Initialize()
 {
 	break_count = 0;
-
+	superchat_count = 0;
+	input_delay = 0;
 	//高得点値を読み込む
 	ReadHighScore();
 
@@ -39,7 +40,7 @@ void GameMainScene::Initialize()
 	img_gameoverWindow  = LoadGraph("Resource/images/gameover_window.png");
 	img_gameclearWindow = LoadGraph("Resource/images/gameclear_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
-	img_superChat = LoadGraph("resource/images/superChat1_sizedwon.png");
+	LoadDivGraph("resource/images/SuperChat.png", 5, 5, 1, 330, 105, image);
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -123,7 +124,14 @@ void GameMainScene::Initialize()
 	{
 		enemy[i] = nullptr;
 	}
-
+	
+	//スパチャの初期化
+	superchat = new SuperChat * [5];
+	for (int i = 0; i < 5; i++)
+	{
+		superchat[i] = nullptr;
+	}
+	
 
 	isGameover  = false;
 	isGameclear = false;
@@ -135,7 +143,7 @@ eSceneType GameMainScene::Update()
 	if (player->GetHP() <= 0.0f) isGameover = true; // プレイヤーの体力が0未満ならゲームオーバー
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) isGameclear = true; // 仮
 
-	if (isGameover || isGameclear)
+	if (isGameover || isGameclear && input_delay > 120)
 	{
 		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
 	}
@@ -328,9 +336,16 @@ eSceneType GameMainScene::Update()
 				}
 			}
 		}*/
-		if (break_count >= 5)
+		if (break_count >= 1)
+		{
+			superchat[superchat_count] = new SuperChat(image[GetRand(4)]);
+			superchat_count++;
+			break_count = 0;
+		}
+		if (superchat_count >= 5)
 		{
 			isGameclear = true;
+			input_delay++;
 		}
 	}
 	return GetNowScene();
@@ -359,6 +374,7 @@ void GameMainScene::Draw() const
 	{
 		if (comment[i] != nullptr) comment[i]->Draw();
 	}
+	
 
 	//プレイヤーの描画
 	player->Draw();
@@ -411,12 +427,15 @@ void GameMainScene::Draw() const
 	DrawFormatString(310, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
 	DrawFormatString(270, 645, GetColor(0, 0, 0), "%08d", mileage / 10);
 	
-	for (int i = 0; i < break_count; i++)
+	//スパチャの表示
+	for (int i = 0; i < 5; i++)
 	{
-		DrawGraph(915, 90 + (i * 120), img_superChat, TRUE);
+		if (superchat[i] != nullptr)
+		{
+			superchat[i]->Draw(i);
+		}
 	}
-	
-	
+
 	//for (int i = 0; i < comment_count; i++)
 	//{
 	//	if (140 + (i * 65) <= 600)
@@ -512,6 +531,11 @@ void GameMainScene::Finalize()
 	for (int i = 0; i < 3; i++)
 	{
 		DeleteGraph(enemy_image[i]);
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		delete superchat[i];
 	}
 
 	delete[] commentDatas;

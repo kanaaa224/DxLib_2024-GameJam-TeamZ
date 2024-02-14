@@ -4,6 +4,7 @@
 #include"../Object/Enemy.h"
 #include"../Object/Player.h"
 #include"../Object/Comment.h"
+#include"../Object/SuperChat.h"
 
 #define BUFFER 2000
 
@@ -15,19 +16,19 @@ private:
 	int barrier_image;   //バリア画像
 	int img_gameoverWindow;  // ゲームオーバー時のウィンドウ画像
 	int img_gameclearWindow; // ゲームクリア時のウィンドウ画像
-	int img_superChat;
-
+ 	int input_delay; //入力遅延
 	int high_score;  //ハイスコア
 	int mileage;   //走行距離
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
 	int comment_count;	//生成したコメント数
 	int break_count;  //撃破した敵をカウントする
+	int superchat_count;  //スパチャをカウントする
 	const char *text[BUFFER];	//コメント表示
 	unsigned int color_num[BUFFER];
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
-
+	int image[5];
 	Comment** comment;         // コメント（敵）
 	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
 	Enemy** enemy;//敵キャラ
@@ -35,6 +36,8 @@ private:
 
 	bool isGameover;  // ゲームオーバーの状態
 	bool isGameclear; // ゲームクリアの状態
+
+	SuperChat** superchat;  //スーパーチャット
 
 public:
 	GameMainScene();

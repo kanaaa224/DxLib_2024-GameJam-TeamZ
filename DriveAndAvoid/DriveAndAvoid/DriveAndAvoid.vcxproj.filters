@@ -69,5 +69,8 @@
     <ClCompile Include="Object\Enemy.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
+    <ClCompile Include="SuperChat.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
