@@ -14,6 +14,7 @@ private:
 	int back_ground;  //背景画像
 	int gamemainscene_image; //ゲームシーン画像
 	int barrier_image;   //バリア画像
+	int img_gameoverWindow; // ゲームオーバー時のウィンドウ画像
 	int mileage;   //走行距離
 	int enemy_image[3];  //敵画像
 	int enemy_count[3];  //通り過ぎた敵カウント
@@ -26,6 +27,8 @@ private:
 	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
 	Enemy** enemy;//敵キャラ
 	int commentDatas_num;      // コメントのデータの数
+
+	bool isGameover; // ゲームオーバーの状態
 
 public:
 	GameMainScene();
