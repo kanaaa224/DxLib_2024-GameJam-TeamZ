@@ -24,7 +24,7 @@ private:
 	float hp;  //体力
 	float fuel;  //燃料
 	int bullet_count; //弾残数
-	Vector2D bullet_pos[50];  //弾の発射場所
+	Vector2D bullet_pos[60];  //弾の発射場所
 	Bullet** bullet; //弾
 	bool bullet_flg; //バレットが生成されているか？
 	int count;   //点滅用カウント

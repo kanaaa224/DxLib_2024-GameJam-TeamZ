@@ -4,7 +4,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), disp_hpbar(0),enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), disp_hpbar(0),enemy(nullptr),break_count(0)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -26,6 +26,8 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
+	break_count = 0;
+
 	//高得点値を読み込む
 	ReadHighScore();
 
@@ -59,18 +61,18 @@ void GameMainScene::Initialize()
 
 	// コメントデータの初期化、読み込み
 	commentDatas = new CommentData[BUFFER];
-
+	
 	FILE* file;
 	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
-
+	
 	if (file_result != 0) throw("Resource/dat/comment.csv が開けませんでした。\n");
 	if (file == NULL)     throw("Resource/dat/comment.csv が開けませんでした。\n");
-
+	
 	char str[100];
 	unsigned int font_color;
 	int font_size;
 	int type;
-
+	
 	commentDatas_num = -1;
 
 	while (fscanf_s(file, "%[^,],%x,%d,%d\n", str, 100, &font_color, &font_size, &type) == 4) {
@@ -84,16 +86,25 @@ void GameMainScene::Initialize()
 		commentDatas[commentDatas_num] = commentData;
 	}
 	
+	
 	int buffer = commentDatas_num;
 
-	for (int i = 0; i < BUFFER - buffer; i++) {
+	//for (int i = 0; i < BUFFER - buffer; i++) {
+	//	commentDatas_num++;
+	// commentDatas = 0 ~ 9 データ有り
+	// commentDatas_num　＝ 10
+	//	commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
+	// commentDatas[10] = commentDatas[0 ～ 10];
+	// commentDatas[10] = commentDatas[10];
+	//}
+
+	for (int i = commentDatas_num + 1; i < BUFFER; i++) {
+		commentDatas[i] = commentDatas[GetRand(commentDatas_num)];
 		commentDatas_num++;
-		commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
 	}
-
+	
 	fclose(file);
-
-
+	
 	// コメントの初期化
 	comment = new Comment * [commentDatas_num];
 
@@ -170,7 +181,20 @@ eSceneType GameMainScene::Update()
 				break;
 			}
 		}
-		//}
+		
+		//敵との当たり判定
+		for (int i = 0; i < 10; i++)
+		{
+			if (enemy[i] != nullptr)
+			{
+				if (player->HitPlayer(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))
+				{
+					delete enemy[i];
+					enemy[i]=nullptr;
+					break_count++;
+				}
+			}
+		}
 
 		// コメント（敵）の更新と当たり判定チェック
 		for (int i = 0; i < commentDatas_num; i++)
@@ -457,6 +481,9 @@ void GameMainScene::Finalize()
 	{
 		DeleteGraph(enemy_image[i]);
 	}
+
+	delete[] commentDatas;
+	commentDatas = nullptr;
 }
 
 //現在のシーン情報を取得

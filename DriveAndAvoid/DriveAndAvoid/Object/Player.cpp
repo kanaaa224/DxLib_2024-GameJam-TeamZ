@@ -24,10 +24,10 @@ void Player::Initialize()
 	fuel = 20000;
 	bullet_count = 0;
 	bullet_flg = true;
-	bullet = new Bullet * [20];
+	bullet = new Bullet * [60];
 	delay = 0;
 
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 60; i++)
 	{
 		bullet[i] = nullptr;
 		bullet_pos[i] = 0;
@@ -57,13 +57,13 @@ void Player::Update()
 {
 	delay++;
 
-	if (bullet_count >= 20)
+	if (bullet_count >= 60)
 	{
 		bullet_count = 0;
 	}
 
 	//弾生成処理処理
-	if (InputControl::GetButton(XINPUT_BUTTON_B) && bullet_count < 20 && delay > 10)
+	if (InputControl::GetButton(XINPUT_BUTTON_B) && bullet_count < 60 && delay > 5)
 	{
 		if (bullet[bullet_count] == nullptr)
 		{
@@ -75,7 +75,7 @@ void Player::Update()
 	}
 
 	//弾が生成されていたら、更新を行う
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 60; i++)
 	{
 		if (bullet[i] != nullptr)
 		{
@@ -157,7 +157,7 @@ void Player::Draw()
 		}
 	}
 
-	for (int i=0; i < 20; i++)
+	for (int i=0; i < 60; i++)
 	{
 		//弾が生成されていたら、描画を行う
 		if (bullet[i] != nullptr)
