@@ -5,6 +5,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), disp_hpbar(0),enemy(nullptr),break_count(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr),img_superChat(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -33,10 +34,12 @@ void GameMainScene::Initialize()
 
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/images/background.png");
-	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
+	gamemainscene_image = LoadGraph("Resource/images/stream.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
-	img_gameoverWindow = LoadGraph("Resource/images/gameover_window.png");
+	img_gameoverWindow  = LoadGraph("Resource/images/gameover_window.png");
+	img_gameclearWindow = LoadGraph("Resource/images/gameclear_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
+	img_superChat = LoadGraph("resource/images/superChat1_sizedwon.png");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -122,21 +125,22 @@ void GameMainScene::Initialize()
 	}
 
 
-	isGameover = false;
+	isGameover  = false;
+	isGameclear = false;
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-	// プレイヤーの体力が0未満ならゲームオーバー
-	if (player->GetHP() <= 0.0f) isGameover = true;
+	if (player->GetHP() <= 0.0f) isGameover = true; // プレイヤーの体力が0未満ならゲームオーバー
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) isGameclear = true; // 仮
 
-	if (isGameover)
+	if (isGameover || isGameclear)
 	{
 		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
-		//return;
 	}
-	else {
+	else
+	{
 		//プレイヤーの更新
 		player->Update();
 
@@ -177,7 +181,7 @@ eSceneType GameMainScene::Update()
 			{
 				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
 				comment[i]->Initialize();
-				comment_count++;
+				//comment_count++;
 				break;
 			}
 		}
@@ -209,7 +213,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -221,7 +225,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -236,12 +240,12 @@ eSceneType GameMainScene::Update()
 					}
 
 					player->SetActive(false);
-					player->DecreaseHP(-10.0f);
+					player->DecreaseHP(-1.0f);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
 					disp_hpbar = 60;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 
@@ -258,7 +262,7 @@ eSceneType GameMainScene::Update()
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
-					comment_count--;
+					//comment_count--;
 				}
 			}
 		}
@@ -286,7 +290,7 @@ eSceneType GameMainScene::Update()
 
 		if (disp_hpbar > 0) disp_hpbar--;
 
-		if (mileage % 100 == 0)
+		/*if (mileage % 100 == 0)
 		{
 			for (int i = 0; i < comment_count; i++)
 			{
@@ -306,7 +310,7 @@ eSceneType GameMainScene::Update()
 					color_num[i] = commentDatas[k].font_color;
 				}
 			}
-		}
+		}*/
 	}
 	return GetNowScene();
 }
@@ -314,7 +318,7 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw() const
 {
-	SetFontSize(16);
+	SetFontSize(14);
 
 	//背景画像の描画
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
@@ -382,26 +386,31 @@ void GameMainScene::Draw() const
 	////体力ゲージの描画
 	//fx = 510.0f;
 	//fy = 430.0f;
-	DrawFormatString(195, 642, GetColor(0, 0, 0), "%.1f万人", player->GetHP());
-	DrawFormatString(287, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
-	DrawFormatString(1100, 43, GetColor(0, 0, 0), "%08d", mileage / 10);
-	
-	for (int i = 0; i < comment_count; i++)
+	DrawFormatString(260, 628, GetColor(0, 0, 0), "%.1f万人", player->GetHP());
+	DrawFormatString(310, 577, GetColor(0, 0, 0), "%.0f万人", player->GetSpped());
+	DrawFormatString(270, 645, GetColor(0, 0, 0), "%08d", mileage / 10);
+	for (int i = 0; i < 5; i++)
 	{
-		if (140 + (i * 65) <= 600)
-		{
-			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), color_num[i], TRUE);
-			DrawFormatString(895, 110 + (i * 65), 0x000000, "%s", text[i]);
-		}
+		DrawGraph(915, 90 + (i*120), img_superChat, TRUE);
 	}
+	
+	
+	//for (int i = 0; i < comment_count; i++)
+	//{
+	//	if (140 + (i * 65) <= 600)
+	//	{
+	//		DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+	//		DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), color_num[i], TRUE);
+	//		DrawFormatString(895, 110 + (i * 65), 0x000000, "%s", text[i]);
+	//	}
+	//}
 
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
 	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
 
 	// ゲームオーバー時のアカウント凍結メッセージ
-	if (isGameover)
+	if (isGameover || isGameclear)
 	{
 		int screenWidth  = 1280;
 		int screenHeight = 720;
@@ -410,7 +419,8 @@ void GameMainScene::Draw() const
 		DrawBox(0, 0, screenWidth, screenHeight, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-		DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameoverWindow, true);
+		if (isGameover)  DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameoverWindow, true);
+		if (isGameclear) DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameclearWindow, true);
 	}
 }
 
