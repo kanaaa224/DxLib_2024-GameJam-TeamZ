@@ -1,20 +1,21 @@
 ﻿#pragma once
 
 #include "../Utility/Vector2D.h"
+#include <string>
 
 class Comment
 {
 private:
 	int type;            // タイプ
-	int font_size;       // コメントのフォントサイズ
-	int font_color;      // コメントのフォントカラー
-	const char* comment; // コメント
+	int font_size;       // フォントサイズ
+	int font_color;      // フォントカラー
+	std::string comment; // 内容
 	float speed;         // 移動速度
 	Vector2D location;   // 位置情報
 	Vector2D box_size;   // 当たり判定の大きさ
 
 public:
-	Comment(int type, int font_size, int font_color, const char* string); // typeが0は移動無し
+	Comment(int type, int font_size, int font_color, std::string string);
 	~Comment();
 
 	void Initialize();        // 初期化処理
@@ -25,14 +26,12 @@ public:
 	int GetType() const;          // タイプ取得
 	Vector2D GetLocation() const; // 位置情報の取得
 	Vector2D GetBoxSize() const;  // 当たり判定の大きさを取得
-
-	int GetFontColor();		//コメントカラー取得
-	const char* GetComment();		  //コメント内容取得
 };
 
-struct CommentData {
-	int type;            // タイプ
-	int font_size;       // コメントのフォントサイズ
-	unsigned int font_color;      // コメントのフォントカラー
-	const char* comment; // コメント
+struct CommentData
+{
+	int type;                // タイプ
+	int font_size;           // フォントサイズ
+	unsigned int font_color; // フォントカラー
+	std::string comment;     // 内容
 };

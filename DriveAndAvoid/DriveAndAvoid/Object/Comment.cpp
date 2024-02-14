@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "math.h"
 
-Comment::Comment(int type, int font_size, int font_color, const char* string) : type(type), font_size(font_size), font_color(font_color), comment(string), speed(0.0f), location(0.0f), box_size(0.0f)
+Comment::Comment(int type, int font_size, int font_color, std::string string) : type(type), font_size(font_size), font_color(font_color), comment(string), speed(0.0f), location(0.0f), box_size(0.0f)
 {
 	
 }
@@ -35,11 +35,11 @@ void Comment::Initialize()
 	else
 	{
 		// 生成位置の設定
-		location = Vector2D((margin_left + (canvas_x_size / 2)) - (GetDrawFormatStringWidth(comment) / 2), ((float)(GetRand(max_y_grid) * font_size + margin_top)));
+		location = Vector2D((margin_left + (canvas_x_size / 2)) - (GetDrawFormatStringWidth(comment.c_str()) / 2), ((float)(GetRand(max_y_grid) * font_size + margin_top)));
 	}
 
 	// 当たり判定の大きさ設定
-	box_size = Vector2D(GetDrawFormatStringWidth(comment), font_size);
+	box_size = Vector2D(GetDrawFormatStringWidth(comment.c_str()), font_size);
 }
 
 void Comment::Update(float speed)
@@ -50,7 +50,7 @@ void Comment::Update(float speed)
 void Comment::Draw() const
 {
 	SetFontSize(font_size);
-	DrawFormatString(location.x, location.y, font_color, comment);
+	DrawFormatString(location.x, location.y, font_color, comment.c_str());
 
 	//DrawBox(location.x, location.y, location.x + GetDrawFormatStringWidth(comment), location.y + font_size, 0xffffff, false);
 }
@@ -75,14 +75,4 @@ Vector2D Comment::GetLocation() const
 Vector2D Comment::GetBoxSize() const
 {
 	return box_size;
-}
-
-int Comment::GetFontColor()
-{
-	return font_color;
-}
-
-const char *Comment::GetComment()
-{
-	return comment;
 }
