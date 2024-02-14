@@ -24,7 +24,7 @@ void Bullet::Draw() const
 
 bool Bullet::IsFinished()
 {
-	return (( bullet_pos.x >= 1000.0f - 180.0f) || ( bullet_pos.y < bullet_size * 2) || (bullet_pos.y  >= 600.0f - bullet_size * 2));
+	return (( bullet_pos.x >= 1000.0f) || ( bullet_pos.y < bullet_size * 2) || (bullet_pos.y  >= 600.0f - bullet_size * 2));
 }
 
 Vector2D Bullet::GetLocation() const

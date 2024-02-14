@@ -3,11 +3,20 @@
 #include"../Utility/Vector2D.h"
 #include"Bullet.h"
 
+enum AnimPlayer
+{
+	FIRE01,
+	FIRE02,
+	FIRE03
+};
+
 class Player
 {
 private:
 	bool is_active;  //有効状態か？
 	int image;  //画像データ
+	int fire_image01; //炎の画像データ
+	int fire_image02;  
 	Vector2D location;  //位置座標
 	Vector2D box_size;  //当たり判定の大きさ
 	float angle;  //角度
@@ -19,7 +28,8 @@ private:
 	Bullet** bullet; //弾
 	bool bullet_flg; //バレットが生成されているか？
 	int count;   //点滅用カウント
-
+	AnimPlayer now_anim; //現在のアニメーション
+	
 public:
 	Player();
 	~Player();
@@ -41,6 +51,8 @@ public:
 	float GetHP() const;  //体力取得
 	bool HitBullet(Vector2D location, Vector2D size); //弾の当たり判定
 	bool HitPlayer(Vector2D location, Vector2D size); //プレイヤーの当たり判定
+	void ChangeAnim(AnimPlayer anim);  //アニメーションの切り替え処理
+
 private:
 	void Movement();  //移動処理
 	void Acceleration();  //加速処理

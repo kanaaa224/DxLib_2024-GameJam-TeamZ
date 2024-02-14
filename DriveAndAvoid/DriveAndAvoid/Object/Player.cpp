@@ -34,13 +34,22 @@ void Player::Initialize()
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/jet.png");
+	fire_image01 = LoadGraph("Resource/images/fire01.png");
+	fire_image02 = LoadGraph("Resource/images/fire02.png");
 
 	//エラーチェック
 	if (image == -1)
 	{
 		throw("Resource/images/car1pol.bmpがありません\n");
 	}
-}
+	if (fire_image01 == -1)
+	{
+		throw("Resource/images/fire01.pngがありません\n");
+	}
+	if (fire_image02 == -1)
+	{
+		throw("Resource/images/fire02.pngがありません\n");
+	}}
 
 //更新処理
 void Player::Update()
@@ -57,7 +66,7 @@ void Player::Update()
 		if (bullet[bullet_count] == nullptr)
 		{
 			bullet_pos[bullet_count] = location;
-			bullet[bullet_count] = new Bullet(location);
+			bullet[bullet_count] = new Bullet(location+30);
 			bullet_count++;
 
 		}
@@ -121,6 +130,19 @@ void Player::Draw()
 		{
 			bullet[i]->Draw();
 		}
+	}
+
+	if (now_anim == AnimPlayer::FIRE01)
+	{
+		DrawRotaGraph(location.x-5, location.y+23, 1.0, 11, fire_image01, TRUE);
+	}
+	if (now_anim == AnimPlayer::FIRE02)
+	{
+		DrawRotaGraph(location.x, location.y+23, 0.75, 11, fire_image01, TRUE);
+	}
+	if (now_anim == AnimPlayer::FIRE03)
+	{
+		DrawRotaGraph(location.x-5, location.y+23, 1.0, 11, fire_image02, TRUE);
 	}
 }
 
@@ -196,12 +218,12 @@ void Player::Movement()
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
 		move += Vector2D(-3.0f, 0.0f);
-		
+		ChangeAnim(FIRE02);
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		move += Vector2D(3.0f, 0.0f);
-		
+		ChangeAnim(FIRE03);
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
@@ -211,14 +233,19 @@ void Player::Movement()
 	{
 		move += Vector2D(0.0f, 3.0f);
 	}
+	if (move.x == 0.0f)
+	{
+		ChangeAnim(FIRE01);
+	}
 
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 1000.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 550.0f - box_size.y))
+	if ((location.x < box_size.x-100) || (location.x >= 1000.0f - 240.0f) || (location.y < box_size.y) || (location.y >= 500.0f - box_size.y))
 	{
 		location -= move;
 	}
+
 }
 
 //加速処理
@@ -280,4 +307,9 @@ bool Player::HitPlayer(Vector2D location, Vector2D size)
 bool Player::GetActive()
 {
 	return is_active;
+}
+
+void Player::ChangeAnim(AnimPlayer anim)
+{
+	now_anim = anim;
 }
