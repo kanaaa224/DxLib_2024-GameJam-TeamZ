@@ -81,16 +81,17 @@ void Player::Update()
 	if (!is_active)
 	{
 		count++;
-		if (count > 60)count = 0;
+		if (count > 100)
+		{
+			count = 0;
+			is_active = true;
+		}
 	}
-
-	//燃料の消費
-	fuel -= speed;
 
 	//移動処理
 	Movement();
 
-	//加減速処理
+	//加減速処理5
 	Acceleration();
 
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
@@ -105,7 +106,7 @@ void Player::Draw()
 {
 	if (!is_active)
 	{
-		if(count<10)DrawGraphF(location.x, location.y, image, TRUE);
+		if (count % 5 == 0)DrawGraphF(location.x, location.y, image, TRUE);
 	}
 	if(is_active)
 	{
@@ -129,10 +130,10 @@ void Player::Finalize()
 	//読み込んだ画像の削除
 	DeleteGraph(image);
 
-	//バリアが生成されていたら、削除する
-	if (barrier != nullptr)
+
+	for (int i = 0; i < 20; i++)
 	{
-		delete barrier;
+		delete bullet[i];
 	}
 }
 
@@ -178,28 +179,11 @@ float Player::GetSpped() const
 	return this->speed;
 }
 
-//燃料取得処理
-float Player::GetFuel() const
-{
-	return this->fuel;
-}
 
 //体力取得処理
 float Player::GetHP() const
 {
 	return this->hp;
-}
-
-//バリア枚数取得処理
-int Player::GetBarrierCount() const
-{
-	return this->barrier_count;
-}
-
-//バリア有効か？を取得
-bool Player::IsBarrier() const
-{
-	return (barrier != nullptr);
 }
 
 //移動処理
@@ -253,6 +237,7 @@ void Player::Acceleration()
 	}
 }
 
+//弾の当たり判定チェック
 bool Player::HitBullet(Vector2D location, Vector2D size)
 {
 	bool is_hit = false;
@@ -269,4 +254,9 @@ bool Player::HitBullet(Vector2D location, Vector2D size)
 		}
 	}
 	return is_hit;
+}
+
+bool Player::GetActive()
+{
+	return is_active;
 }

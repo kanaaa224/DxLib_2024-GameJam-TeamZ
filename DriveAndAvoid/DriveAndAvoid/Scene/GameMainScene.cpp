@@ -193,8 +193,8 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHP() <= 0.0f)
+	//プレイヤーの体力が0未満なら、リザルトに遷移する
+	if ( player->GetHP() <= 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
@@ -374,8 +374,8 @@ void GameMainScene::ReadHighScore()
 // 当たり判定処理(プレイヤーと敵)
 bool GameMainScene::IsHitCheck(Player * p, Comment * e)
 {
-	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
-	if (p->IsBarrier())
+	//プレイヤーが点滅していたら、当たり判定を無視する
+	if (p->GetActive()==false)
 	{
 		return false;
 	}
