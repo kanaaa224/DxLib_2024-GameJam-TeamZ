@@ -10,7 +10,8 @@ private:
 	Vector2D location;  //位置座標
 	Vector2D box_size;  //当たり判定の大きさ
 	float speed;  //速さ
-	int hp;  //体力
+	int  angle;//プレイヤーが回転する角度
+
 
 public:
 	Enemy(int image_handle, int type);
@@ -22,6 +23,4 @@ public:
 public:
 	Vector2D GetLocation() const;  //位置座標取得
 	Vector2D GetBoxSize() const;  //当たり判定の大きさ取得
-	int GetHp() const;  //体力取得
-	void SetHp(int hp);
 };
