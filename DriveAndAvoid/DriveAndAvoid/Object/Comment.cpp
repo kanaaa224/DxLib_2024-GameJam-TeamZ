@@ -40,6 +40,8 @@ void Comment::Initialize()
 
 	// 当たり判定の大きさ設定
 	box_size = Vector2D(GetDrawFormatStringWidth(comment.c_str()), font_size);
+
+	SetFontSize(16);
 }
 
 void Comment::Update(float speed)
@@ -49,7 +51,7 @@ void Comment::Update(float speed)
 
 void Comment::Draw() const
 {
-	SetFontSize(font_size);
+	//SetFontSize(font_size);
 	DrawFormatString(location.x, location.y, font_color, comment.c_str());
 
 	//DrawBox(location.x, location.y, location.x + GetDrawFormatStringWidth(comment), location.y + font_size, 0xffffff, false);
