@@ -10,7 +10,7 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
 	}
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < BUFFER; i++)
 	{
 		text[i] = 0;
 	}
@@ -55,7 +55,7 @@ void GameMainScene::Initialize()
 
 
 	// コメントデータの初期化、読み込み
-	commentDatas = new CommentData[100];
+	commentDatas = new CommentData[BUFFER];
 
 	FILE* file;
 	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
@@ -72,13 +72,20 @@ void GameMainScene::Initialize()
 
 	while (fscanf_s(file, "%[^,],%x,%d,%d\n", str, 100, &font_color, &font_size, &type) == 4) {
 		CommentData commentData;
-		commentData.comment    = str;
+		commentData.comment = str;
 		commentData.font_color = font_color;
-		commentData.font_size  = font_size;
-		commentData.type       = type;
+		commentData.font_size = font_size;
+		commentData.type = type;
 
 		commentDatas_num++;
 		commentDatas[commentDatas_num] = commentData;
+	}
+	
+	int buffer = commentDatas_num;
+
+	for (int i = 0; i < BUFFER - buffer; i++) {
+		commentDatas_num++;
+		commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
 	}
 
 	fclose(file);
@@ -103,8 +110,8 @@ eSceneType GameMainScene::Update()
 	mileage++;
 
 	// コメント（敵）生成処理
-	if (mileage / 20 % 100 == 0)
-	{
+	//if (mileage / 20 % 100 == 0)
+	//{
 		for (int i = 0; i < commentDatas_num; i++)
 		{
 			if (comment[i] == nullptr)
@@ -115,7 +122,7 @@ eSceneType GameMainScene::Update()
 				break;
 			}
 		}
-	}
+	//}
 
 	// コメント（敵）の更新と当たり判定チェック
 	for (int i = 0; i < commentDatas_num; i++)
@@ -125,7 +132,7 @@ eSceneType GameMainScene::Update()
 			comment[i]->Update(player->GetSpped());
 
 			// 画面外に行ったら、敵を削除してスコア加算
-			if (comment[i]->GetLocation().x <= 0.0f)
+			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
 			{
 				enemy_count[comment[i]->GetType()]++;
 				comment[i]->Fialize();
@@ -181,10 +188,10 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-	//プレイヤーの燃料が体力が0未満なら、リザルトに遷移する
-	if (player->GetHP() <= 0.0f)
+	//プレイヤーの体力が0未満なら、リザルトに遷移する
+	if ( player->GetHP() <= 0.0f)
 	{
-		return eSceneType::E_RESULT;
+		//return eSceneType::E_RESULT;
 	}
 
 	if (disp_hpbar > 0) disp_hpbar--;
@@ -220,7 +227,8 @@ void GameMainScene::Draw() const
 		}
 	}
 	DrawGraph(0, 0, gamemainscene_image, TRUE);
-	SetFontSize(15);
+	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
+	//SetFontSize(15);
 	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	//DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
 	//DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
@@ -256,14 +264,16 @@ void GameMainScene::Draw() const
 	DrawFormatString(10, 5, 0x00ffff, "%d", comment_count);
 	for (int i = 0; i < comment_count ; i++)
 	{
-		if (140 + (i * 65) <= 600)
-		{
-			DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
-			DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff0000, TRUE);
-			DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
-		}
+			if (140 + (i * 65) <= 600)
+			{
+				DrawBox(890, 90 + (i * 65), 1235, 140 + (i * 65), 0x000000, FALSE);
+				DrawBox(891, 91 + (i * 65), 1234, 139 + (i * 65), 0xff2510, TRUE);
+				DrawFormatString(890, 110 + (i * 65), 0xffffff, "%s", text[i]);
+			}
 	}
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
+
+	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
 }
 
 //終了時処理
@@ -364,8 +374,8 @@ void GameMainScene::ReadHighScore()
 // 当たり判定処理(プレイヤーと敵)
 bool GameMainScene::IsHitCheck(Player * p, Comment * e)
 {
-	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
-	if (p->IsBarrier())
+	//プレイヤーが点滅していたら、当たり判定を無視する
+	if (p->GetActive()==false)
 	{
 		return false;
 	}
