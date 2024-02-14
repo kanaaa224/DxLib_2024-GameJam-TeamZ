@@ -160,12 +160,25 @@ eSceneType GameMainScene::Update()
 	// コメント（敵）の更新と当たり判定チェック
 	for (int i = 0; i < commentDatas_num; i++)
 	{
+		if (comment[i] != nullptr) comment[i]->Update(player->GetSpped());
+
+		// 画面外に行ったら、敵を削除してスコア加算
 		if (comment[i] != nullptr)
 		{
-			comment[i]->Update(player->GetSpped());
-
-			// 画面外に行ったら、敵を削除してスコア加算
 			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
+			{
+				enemy_count[comment[i]->GetType()]++;
+				comment[i]->Fialize();
+				delete comment[i];
+				comment[i] = nullptr;
+				comment_count--;
+			}
+		}
+
+		// 赤コメントはしばらくして消す
+		if (comment[i] != nullptr)
+		{
+			if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
 			{
 				enemy_count[comment[i]->GetType()]++;
 				comment[i]->Fialize();
@@ -180,6 +193,10 @@ eSceneType GameMainScene::Update()
 		{
 			if (player->HitPlayer(comment[i]->GetLocation(),comment[i]->GetBoxSize()))
 			{
+				if (comment[i]->GetFontColor() == 0x00ffff) {
+					// 回復
+				}
+				
 				player->SetActive(false);
 				player->DecreaseHP(-5.0f);
 				comment[i]->Fialize();
@@ -190,10 +207,15 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
+		// 弾ヒット
 		if (comment[i] != nullptr)
 		{
 			if (player->HitBullet(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
 			{
+				if (comment[i]->GetFontColor() == 0x00ffff) {
+					// 回復
+				}
+
 				comment[i]->Fialize();
 				delete comment[i];
 				comment[i] = nullptr;
@@ -221,7 +243,7 @@ eSceneType GameMainScene::Update()
 	}
 
 	//プレイヤーの体力が0未満なら、リザルトに遷移する
-	if ( player->GetHP() <= 0.0f)
+	if (player->GetHP() <= 0.0f)
 	{
 		//return eSceneType::E_RESULT;
 	}
@@ -234,6 +256,8 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw() const
 {
+	SetFontSize(16);
+
 	//背景画像の描画
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
