@@ -78,7 +78,11 @@ void Player::Update()
 		}
 	}
 
-	
+	if (!is_active)
+	{
+		count++;
+		if (count > 60)count = 0;
+	}
 
 	//燃料の消費
 	fuel -= speed;
@@ -99,8 +103,15 @@ void Player::Update()
 //描画処理
 void Player::Draw()
 {
-	//プレイヤー画像の描画
-	DrawGraphF(location.x, location.y, image, TRUE);
+	if (!is_active)
+	{
+		if(count<10)DrawGraphF(location.x, location.y, image, TRUE);
+	}
+	if(is_active)
+	{
+		//プレイヤー画像の描画
+		DrawGraphF(location.x, location.y, image, TRUE);
+	}
 
 	for (int i=0; i < 20; i++)
 	{

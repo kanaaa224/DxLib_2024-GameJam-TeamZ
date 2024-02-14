@@ -21,7 +21,7 @@ private:
 	Vector2D bullet_pos[50];  //弾の発射場所
 	Bullet** bullet; //弾
 	bool bullet_flg; //バレットが生成されているか？
-
+	int count;   //点滅用カウント
 
 public:
 	Player();
