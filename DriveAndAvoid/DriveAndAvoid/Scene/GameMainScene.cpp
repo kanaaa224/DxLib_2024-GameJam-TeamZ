@@ -4,7 +4,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), disp_hpbar(0),enemy(nullptr)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -33,7 +33,8 @@ void GameMainScene::Initialize()
 	back_ground = LoadGraph("Resource/images/background.png");
 	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
 	barrier_image = LoadGraph("Resource/images/barrier.png");
-	img_gameoverWindow = LoadGraph("Resource/images/gameover_window.png");
+	img_gameoverWindow  = LoadGraph("Resource/images/gameover_window.png");
+	img_gameclearWindow = LoadGraph("Resource/images/gameclear_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 
 	//エラーチェック
@@ -111,21 +112,22 @@ void GameMainScene::Initialize()
 	}
 
 
-	isGameover = false;
+	isGameover  = false;
+	isGameclear = false;
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-	// プレイヤーの体力が0未満ならゲームオーバー
-	if (player->GetHP() <= 0.0f) isGameover = true;
+	if (player->GetHP() <= 0.0f) isGameover = true; // プレイヤーの体力が0未満ならゲームオーバー
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) isGameclear = true; // 仮
 
-	if (isGameover)
+	if (isGameover || isGameclear)
 	{
 		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
-		//return;
 	}
-	else {
+	else
+	{
 		//プレイヤーの更新
 		player->Update();
 
@@ -377,7 +379,7 @@ void GameMainScene::Draw() const
 	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
 
 	// ゲームオーバー時のアカウント凍結メッセージ
-	if (isGameover)
+	if (isGameover || isGameclear)
 	{
 		int screenWidth  = 1280;
 		int screenHeight = 720;
@@ -386,7 +388,8 @@ void GameMainScene::Draw() const
 		DrawBox(0, 0, screenWidth, screenHeight, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-		DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameoverWindow, true);
+		if (isGameover)  DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameoverWindow, true);
+		if (isGameclear) DrawRotaGraph(screenWidth / 2, screenHeight / 2, 0.9f, 0.0f, img_gameclearWindow, true);
 	}
 }
 
