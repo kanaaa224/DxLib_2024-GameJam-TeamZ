@@ -3,7 +3,7 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), disp_hpbar(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), disp_hpbar(0),enemy(nullptr)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -91,6 +91,14 @@ void GameMainScene::Initialize()
 	{
 		comment[i] = nullptr;
 	}
+
+	//エネミーの初期化
+	enemy = new Enemy * [10];
+
+	for (int i = 0; i < 10; i++)
+	{
+		enemy[i] = nullptr;
+	}
 }
 
 //更新処理
@@ -101,6 +109,30 @@ eSceneType GameMainScene::Update()
 
 	//移動距離の更新
 	mileage++;
+
+	//エネミーの処理
+	
+	bool can_spawn_enemy = false;
+	if (GetRand(100) == 0)can_spawn_enemy = TRUE;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Update();
+			if (enemy[i]->GetLocation().x < -100)
+			{
+				delete enemy[i];
+				enemy[i] = nullptr;
+			}
+		}
+		else if (can_spawn_enemy)
+		{
+			enemy[i] = new Enemy(NULL, 1);
+			can_spawn_enemy = false;
+		}
+	}
+
 
 	// コメント（敵）生成処理
 	if (mileage / 20 % 100 == 0)
@@ -197,6 +229,15 @@ void GameMainScene::Draw() const
 	//背景画像の描画
 	DrawGraph(-mileage % 900, 0, back_ground, TRUE);
 	DrawGraph(-mileage % 900 + 900, 0, back_ground, TRUE);
+
+	//てきキャラのひょうじ
+	for (int i = 0; i < 10; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Draw();
+		}
+	}
 
 	// コメント（敵）の描画
 	for (int i = 0; i < commentDatas_num; i++)

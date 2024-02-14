@@ -143,6 +143,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Object\Barrier.cpp" />
     <ClCompile Include="Object\Comment.cpp" />
+    <ClCompile Include="Object\Enemy.cpp" />
     <ClCompile Include="Object\Player.cpp" />
     <ClCompile Include="Object\RankingData.cpp" />
     <ClCompile Include="Scene\GameMainScene.cpp" />

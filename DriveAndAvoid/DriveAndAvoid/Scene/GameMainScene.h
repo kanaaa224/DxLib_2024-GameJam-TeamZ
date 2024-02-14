@@ -1,6 +1,7 @@
 #pragma once
 
 #include"SceneBase.h"
+#include"../Object/Enemy.h"
 #include"../Object/Player.h"
 #include"../Object/Comment.h"
 
@@ -21,6 +22,7 @@ private:
 
 	Comment** comment;         // コメント（敵）
 	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
+	Enemy** enemy;//敵キャラ
 	int commentDatas_num;      // コメントのデータの数
 
 public:
