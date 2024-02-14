@@ -122,7 +122,7 @@ eSceneType GameMainScene::Update()
 
 	if (isGameover)
 	{
-		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RANKING_DISP; // E_RESULT
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
 		//return;
 	}
 	else {
@@ -177,120 +177,117 @@ eSceneType GameMainScene::Update()
 		{
 			if (comment[i] != nullptr) comment[i]->Update(player->GetSpped());
 
-		// 画面外に行ったら、敵を削除してスコア加算
-		if (comment[i] != nullptr)
-		{
-			if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
+			// 画面外に行ったら、敵を削除してスコア加算
+			if (comment[i] != nullptr)
 			{
-				/*enemy_count[comment[i]->GetType()]++;*/
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				comment_count--;
-			}
-		}
-
-		// 赤コメントはしばらくして消す
-		if (comment[i] != nullptr)
-		{
-			if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
-			{
-				/*enemy_count[comment[i]->GetType()]++;*/
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				comment_count--;
-			}
-		}
-
-		// 当たり判定の確認
-		if (comment[i] != nullptr)
-		{
-			if (player->HitPlayer(comment[i]->GetLocation(),comment[i]->GetBoxSize()))
-			{
-				if (comment[i]->GetFontColor() == 0x00ffff) {
-					// 回復
-					player->DecreaseHP(2);
-				}
-				
-				player->SetActive(false);
-				player->DecreaseHP(-1.0f);
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				disp_hpbar = 60;
-				comment_count--;
-			}
-		}
-
-		// 弾ヒット
-		if (comment[i] != nullptr)
-		{
-			if (player->HitBullet(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
-			{
-				if (comment[i]->GetFontColor() == 0x00ffff) {
-					// 回復
-					player->DecreaseHP(2);
-				}
-
-				comment[i]->Fialize();
-				delete comment[i];
-				comment[i] = nullptr;
-				comment_count--;
-			}
-		}
-	}
-
-	// スパチャ
-	//for (int i = 0; i < commentDatas_num; i++)
-	//{
-	//	//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
-	//	int k = i;
-	//	if (comment[i] != nullptr)
-	//	{
-	//		if(GetRand(100) == 0)text[i] = commentDatas[i].comment.c_str();
-	//	}
-	//	else
-	//	{
-	//		while (comment[k] == nullptr)
-	//		{
-	//			k++;
-	//		}
-	//		if (k < BUFFER) text[i] = commentDatas[k].comment.c_str();
-	//	}
-	//}
-
-	//プレイヤーの体力が0未満なら、リザルトに遷移する
-	if (player->GetHP() <= 0.0f)
-	{
-		//return eSceneType::E_RESULT;
-	}
-
-	if (disp_hpbar > 0) disp_hpbar--;
-
-	if (mileage % 100 == 0)
-	{
-		for (int i = 0; i < comment_count; i++)
-		{
-			int k = GetRand(100) + 1;
-			if (comment[k] != nullptr)
-			{
-				text[i] = commentDatas[k].comment.c_str();
-				color_num[i] = commentDatas[k].font_color;
-			}
-			else
-			{
-				while (comment[k] == nullptr)
+				if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
 				{
-					k++;
+					/*enemy_count[comment[i]->GetType()]++;*/
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					comment_count--;
 				}
-				text[i] = commentDatas[k].comment.c_str();
-				color_num[i] = commentDatas[k].font_color;
+			}
+
+			// 赤コメントはしばらくして消す
+			if (comment[i] != nullptr)
+			{
+				if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
+				{
+					/*enemy_count[comment[i]->GetType()]++;*/
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					comment_count--;
+				}
+			}
+
+			// 当たり判定の確認
+			if (comment[i] != nullptr)
+			{
+				if (player->HitPlayer(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
+				{
+					if (comment[i]->GetFontColor() == 0x00ffff) {
+						// 回復
+						player->DecreaseHP(2);
+					}
+
+					player->SetActive(false);
+					player->DecreaseHP(-10.0f);
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					disp_hpbar = 60;
+					comment_count--;
+				}
+			}
+
+			// 弾ヒット
+			if (comment[i] != nullptr)
+			{
+				if (player->HitBullet(comment[i]->GetLocation(), comment[i]->GetBoxSize()))
+				{
+					if (comment[i]->GetFontColor() == 0x00ffff) {
+						// 回復
+						player->DecreaseHP(2);
+					}
+
+					comment[i]->Fialize();
+					delete comment[i];
+					comment[i] = nullptr;
+					comment_count--;
+				}
 			}
 		}
-	}
 
-	return GetNowScene();
+		// スパチャ
+		//for (int i = 0; i < commentDatas_num; i++)
+		//{
+		//	//text[i] = commentDatas[GetRand(commentDatas_num)].comment.c_str();
+		//	int k = i;
+		//	if (comment[i] != nullptr)
+		//	{
+		//		if(GetRand(100) == 0)text[i] = commentDatas[i].comment.c_str();
+		//	}
+		//	else
+		//	{
+		//		while (comment[k] == nullptr)
+		//		{
+		//			k++;
+		//		}
+		//		if (k < BUFFER) text[i] = commentDatas[k].comment.c_str();
+		//	}
+		//}
+
+		//プレイヤーの体力が0未満なら、リザルトに遷移する
+
+		if (disp_hpbar > 0) disp_hpbar--;
+
+		if (mileage % 100 == 0)
+		{
+			for (int i = 0; i < comment_count; i++)
+			{
+				int k = GetRand(100) + 1;
+				if (comment[k] != nullptr)
+				{
+					text[i] = commentDatas[k].comment.c_str();
+					color_num[i] = commentDatas[k].font_color;
+				}
+				else
+				{
+					while (comment[k] == nullptr)
+					{
+						k++;
+					}
+					text[i] = commentDatas[k].comment.c_str();
+					color_num[i] = commentDatas[k].font_color;
+				}
+			}
+		}
+
+		return GetNowScene();
+	}
 }
 
 //描画処理
