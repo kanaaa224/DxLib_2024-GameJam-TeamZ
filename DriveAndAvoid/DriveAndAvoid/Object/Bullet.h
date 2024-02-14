@@ -4,10 +4,6 @@
 
 class Bullet : public Collider
 {
-private:
-	Vector2D location;  //ˆÊ’uÀ•W
-	float size;  //“–‚½‚è”»’è‚Ì‘å‚«‚³
-
 public:
 	Bullet(Vector2D location);
 	~Bullet();

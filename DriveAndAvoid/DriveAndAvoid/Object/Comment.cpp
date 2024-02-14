@@ -19,7 +19,7 @@ void Comment::Update()
 void Comment::Draw()const
 {
 	//ƒvƒŒƒCƒ„[‰æ‘œ‚Ì•`‰æ
-	DrawFormatString(location.x, location.y, color, comment);
+	DrawFormatString(location.x, location.y, color, "comment");
 	DrawBox(location.x, location.y, location.x + size.x, location.y + size.y, color, FALSE);
 }
 
