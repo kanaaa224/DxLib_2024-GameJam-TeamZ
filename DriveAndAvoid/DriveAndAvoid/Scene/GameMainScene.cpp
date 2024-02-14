@@ -182,7 +182,6 @@ eSceneType GameMainScene::Update()
 			{
 				if ((comment[i]->GetLocation().x + comment[i]->GetBoxSize().x) <= 0.0f)
 				{
-					/*enemy_count[comment[i]->GetType()]++;*/
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
@@ -195,7 +194,6 @@ eSceneType GameMainScene::Update()
 			{
 				if (comment[i]->GetFontColor() == 0xff0000 && (GetRand(300) == 0))
 				{
-					/*enemy_count[comment[i]->GetType()]++;*/
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
