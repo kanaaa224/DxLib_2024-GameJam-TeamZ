@@ -11,6 +11,9 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
+	}
+	for (int i = 0; i < 5; i++)
+	{
 		save_superchat[i] = NULL;
 	}
 	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
@@ -134,6 +137,7 @@ void GameMainScene::Initialize()
 	for (int i = 0; i < 5; i++)
 	{
 		superchat[i] = nullptr;
+		save_superchat[i] = NULL;
 	}
 	
 
