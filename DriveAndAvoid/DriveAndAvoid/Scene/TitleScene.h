@@ -10,6 +10,8 @@ private:
 	int menu_image;  //メニュー画像
 	int cursor_image;  //カーソル画像
 	int menu_cursor;   //メニューカーソル番号
+	int cursor_moveSE;	//カーソル移動時のSE
+	int cursor_selectSE;	//決定時のSE
 
 public:
 	TitleScene();

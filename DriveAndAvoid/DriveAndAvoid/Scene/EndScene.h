@@ -2,20 +2,19 @@
 
 #include"SceneBase.h"
 
-class HelpScene :public SceneBase
+class EndScene :public SceneBase
 {
 private:
-	int background_image; //”wŒi‰æ‘œ
-	int titleback_SE;	//ƒ^ƒCƒgƒ‹‚É–ß‚éSE
+	int back_ground_image;
+	int count;
 
 public:
-	HelpScene();
-	virtual ~HelpScene();
+	EndScene();
+	~EndScene();
 
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;
 	virtual void Draw() const override;
 	virtual void Finalize() override;
-
 	virtual eSceneType GetNowScene() const override;
 };

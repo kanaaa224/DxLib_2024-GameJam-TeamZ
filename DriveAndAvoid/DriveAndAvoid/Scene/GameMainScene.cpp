@@ -5,6 +5,7 @@
 #include<math.h>
 
 
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0),random_num(0)
 {
 	for (int i = 0; i < 3; i++)
@@ -12,11 +13,11 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 		enemy_image[i] = NULL;
 		save_superchat[i] = NULL;
 	}
-	for (int i = 0; i < BUFFER; i++)
+	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
 		text[i] = 0;
 		color_num[i] = 0xffffff;
-	}
+	}*/
 }
 
 GameMainScene::~GameMainScene()
@@ -42,6 +43,15 @@ void GameMainScene::Initialize()
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 	LoadDivGraph("resource/images/SuperChat.png", 5, 5, 1, 330, 105, image);
 
+	//SEの読み込み
+	comment_breakSE = LoadSoundMem("Resource/sounds/commentbreakSE.mp3");
+	enemy_downSE = LoadSoundMem("Resource/sounds/enemydownSE.mp3");
+	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
+	changescene_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
+	ChangeVolumeSoundMem(150, comment_breakSE);
+	ChangeVolumeSoundMem(170, enemy_downSE);
+	ChangeVolumeSoundMem(170, player_damageSE);
+
 	//エラーチェック
 	if (back_ground == -1)
 	{
@@ -64,7 +74,7 @@ void GameMainScene::Initialize()
 
 
 	// コメントデータの初期化、読み込み
-	commentDatas = new CommentData[BUFFER];
+	commentDatas = new CommentData[MAX_COMMENT_NUM];
 	
 	FILE* file;
 	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
@@ -90,24 +100,15 @@ void GameMainScene::Initialize()
 		commentDatas[commentDatas_num] = commentData;
 	}
 	
-	
 	int buffer = commentDatas_num;
 
-	//for (int i = 0; i < BUFFER - buffer; i++) {
-	//	commentDatas_num++;
-	// commentDatas = 0 ~ 9 データ有り
-	// commentDatas_num　＝ 10
-	//	commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
-	// commentDatas[10] = commentDatas[0 ～ 10];
-	// commentDatas[10] = commentDatas[10];
-	//}
-
-	for (int i = commentDatas_num + 1; i < BUFFER; i++) {
+	for (int i = commentDatas_num + 1; i < MAX_COMMENT_NUM; i++) {
 		commentDatas[i] = commentDatas[GetRand(commentDatas_num)];
 		commentDatas_num++;
 	}
 	
 	fclose(file);
+
 	
 	// コメントの初期化
 	comment = new Comment * [commentDatas_num];
@@ -116,6 +117,7 @@ void GameMainScene::Initialize()
 	{
 		comment[i] = nullptr;
 	}
+
 
 	//エネミーの初期化
 	enemy = new Enemy * [10];
@@ -145,7 +147,11 @@ eSceneType GameMainScene::Update()
 
 	if (isGameover || isGameclear && input_delay > 120)
 	{
-		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
+		{
+			PlaySoundMem(changescene_SE, DX_PLAYTYPE_NORMAL, TRUE);
+			return eSceneType::E_RESULT; // E_RESULT
+		}
 	}
 	else
 	{
@@ -201,22 +207,25 @@ eSceneType GameMainScene::Update()
 			{
 				if (player->HitPlayer(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))  //プレイヤーと敵の当たり判定
 				{
-					if (comment[i]->GetFontColor() == 0x00ffff) {
-						// 回復
-						player->DecreaseHP(2);
-					}
+					//if (comment[i]->GetFontColor() == 0x00ffff) {
+					//	// 回復
+					//	player->DecreaseHP(2);
+					//}
 
 					player->SetActive(false);
 					player->DecreaseHP(-1.0f);
+					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 
 					delete enemy[i];
 					enemy[i]=nullptr;
+					disp_hpbar = 60;
 				}
 			}
 			if (enemy[i] != nullptr)   
 			{
 				if (player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))    //弾と敵の当たり判定
 				{
+					PlaySoundMem(enemy_downSE, DX_PLAYTYPE_BACK, TRUE);
 					delete enemy[i];
 					enemy[i] = nullptr;
 					break_count++;
@@ -262,7 +271,7 @@ eSceneType GameMainScene::Update()
 						// 回復
 						player->DecreaseHP(2);
 					}
-
+					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 					player->SetActive(false);
 					player->DecreaseHP(-1.0f);
 					comment[i]->Fialize();
@@ -282,7 +291,7 @@ eSceneType GameMainScene::Update()
 						// 回復
 						player->DecreaseHP(2);
 					}
-
+					PlaySoundMem(comment_breakSE, DX_PLAYTYPE_BACK, TRUE);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
@@ -306,7 +315,7 @@ eSceneType GameMainScene::Update()
 		//		{
 		//			k++;
 		//		}
-		//		if (k < BUFFER) text[i] = commentDatas[k].comment.c_str();
+		//		if (k < MAX_COMMENT_NUM) text[i] = commentDatas[k].comment.c_str();
 		//	}
 		//}
 
@@ -341,9 +350,32 @@ eSceneType GameMainScene::Update()
 			save_superchat[random_num]++;
 			superchat[superchat_count] = new SuperChat(image[random_num]);
 			superchat_count++;
-			player->IncreaseSpeed(2.0f);
+			player->IncreaseSpeed(1.0f);
 			break_count = 0;
 		}
+
+		switch (superchat_count) {
+		case 0:
+			commentDatas_num = 5;
+			break;
+
+		case 1:
+			commentDatas_num = 10;
+			break;
+
+		case 2:
+			commentDatas_num = 20;
+			break;
+
+		case 3:
+			commentDatas_num = 100;
+			break;
+
+		case 4:
+			commentDatas_num = MAX_COMMENT_NUM - 1;
+			break;
+		}
+
 		if (superchat_count >= 5)
 		{
 			isGameclear = true;
@@ -450,7 +482,7 @@ void GameMainScene::Draw() const
 
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
-	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
+	DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
 
 	// ゲームオーバー時のアカウント凍結メッセージ
 	if (isGameover || isGameclear)
@@ -511,8 +543,8 @@ void GameMainScene::Finalize()
 
 	delete[] enemy;
 
-	// コメント（敵）の削除
 
+	// コメント（敵）の削除
 	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
@@ -524,6 +556,9 @@ void GameMainScene::Finalize()
 	}
 
 	delete[] comment;
+	delete[] commentDatas;
+	commentDatas = nullptr;
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -535,9 +570,7 @@ void GameMainScene::Finalize()
 		delete superchat[i];
 	}
 
-	delete[] commentDatas;
-	commentDatas = nullptr;
-
+	InitSoundMem();
 }
 
 //現在のシーン情報を取得

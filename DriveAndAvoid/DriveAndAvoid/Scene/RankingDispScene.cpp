@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-RankingDispScene::RankingDispScene() :background_image(NULL), ranking(nullptr)
+RankingDispScene::RankingDispScene() :background_image(NULL), ranking(nullptr), titleback_SE(NULL)
 {
 
 }
@@ -18,6 +18,9 @@ void RankingDispScene::Initialize()
 	//画像の読み込み
 	background_image = LoadGraph("Resource/images/ranking_background.png");
 	ranking_board_image = LoadGraph("Resource/images/ranking_board.png");
+
+	//SEの読み込み
+	titleback_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
 
 	//エラーチェック
 	if (background_image == -1)
@@ -37,6 +40,7 @@ eSceneType RankingDispScene::Update()
 	//Bボタンが押されたら、タイトルに戻る
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(titleback_SE, DX_PLAYTYPE_NORMAL, TRUE);
 		return eSceneType::E_TITLE;
 	}
 
@@ -65,6 +69,9 @@ void RankingDispScene::Finalize()
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
 	DeleteGraph(ranking_board_image);
+
+	//読み込んだSEの削除
+	InitSoundMem();
 
 	//動的メモリの解放
 	ranking->Finalize();

@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-HelpScene::HelpScene() : background_image(NULL)
+HelpScene::HelpScene() : background_image(NULL), titleback_SE(NULL)
 {
 
 }
@@ -18,6 +18,9 @@ void HelpScene::Initialize()
 	//画像の読み込み
 	background_image = LoadGraph("Resource/images/Title.bmp");
 
+	//SEの読み込み
+	titleback_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
+
 	//エラーチェック
 	if (background_image == -1)
 	{
@@ -31,6 +34,7 @@ eSceneType HelpScene::Update()
 	//Bボタンが押されたら、タイトルに戻る
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(titleback_SE, DX_PLAYTYPE_NORMAL, TRUE);
 		return eSceneType::E_TITLE;
 	}
 
@@ -60,6 +64,9 @@ void HelpScene::Finalize()
 {
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
+
+	//読み込んだSEの削除
+	InitSoundMem();
 }
 
 //現在のシーン情報を取得
