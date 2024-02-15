@@ -58,6 +58,14 @@ void CommentManager::Update(Player* player)
 				delete normal_comment[i];
 				normal_comment[i] = nullptr;
 			}
+			else if (player->HitBullet(normal_comment[i]))
+			{
+				if (normal_comment[i]->HitBullet() <= 0)
+				{
+					delete normal_comment[i];
+					normal_comment[i] = nullptr;
+				}
+			}
 		}
 
 		if (big_comment[i] != nullptr)//大きいサイズのコメントの更新
@@ -66,6 +74,14 @@ void CommentManager::Update(Player* player)
 			{
 				delete big_comment[i];
 				big_comment[i] = nullptr;
+			}
+			else if (player->HitBullet(big_comment[i]))
+			{
+				if (big_comment[i]->HitBullet() <= 0)
+				{
+					delete big_comment[i];
+					big_comment[i] = nullptr;
+				}
 			}
 		}
 	}

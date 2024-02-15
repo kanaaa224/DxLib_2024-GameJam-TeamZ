@@ -59,7 +59,7 @@ void Player::Update()
 		if (bullet[i] != nullptr)
 		{
 			bullet[i]->Update();
-			if (bullet[i]->GetLocation().x > 1000)
+			if (bullet[i]->GetLocation().x > 1280)
 			{
 				delete bullet[i];
 				bullet[i] = nullptr;

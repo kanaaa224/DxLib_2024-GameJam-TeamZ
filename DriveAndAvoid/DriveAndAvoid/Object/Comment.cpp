@@ -5,17 +5,17 @@
 
 Comment::Comment(const char* comment, float font_size) : Collider(Vector2D(0.0f, 0.0f), Vector2D(0.0f, 0.0f)), comment(comment), speed(0.0f), hp(5), color(0xffffff)
 {
-	location = Vector2D(1000.0f, GetRand(20) * (font_size + 3));
+	location = Vector2D(1500.0f, GetRand(20) * (font_size + 3));
 
 	size = Vector2D(GetDrawFormatStringWidth(comment), font_size);
 	speed = GetRand(2) + 1;
-	if (GetRand(10) == 0)color = 0xff0000;//1割の確率でコメントの色を赤色にする
+	//if (GetRand(10) == 0)color = 0xff0000;//1割の確率でコメントの色を赤色にする
 }
 
 //更新処理
 bool Comment::Update()
 {
-	//color = 0xffffff;
+	color = 0xffffff;
 	location.x -= speed;
 
 	return (location.x < -200);
