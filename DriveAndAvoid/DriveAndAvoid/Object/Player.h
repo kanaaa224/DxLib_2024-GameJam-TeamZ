@@ -16,7 +16,8 @@ private:
 	bool is_active;  //有効状態か？
 	int image;  //画像データ
 	int fire_image01; //炎の画像データ
-	int fire_image02;  
+	int fire_image02;
+	int bulletSE;	//弾発射時のSE
 	Vector2D location;  //位置座標
 	Vector2D box_size;  //当たり判定の大きさ
 	float angle;  //角度

@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-TitleScene::TitleScene() :background_image(NULL), menu_image(NULL), cursor_image(NULL), menu_cursor(0)
+TitleScene::TitleScene() :background_image(NULL), menu_image(NULL), cursor_image(NULL), menu_cursor(0),cursor_moveSE(NULL),cursor_selectSE(NULL)
 {
 
 }
@@ -19,6 +19,10 @@ void TitleScene::Initialize()
 	chara_image = LoadGraph("Resource/images/title_chara.png");
 	background_image = LoadGraph("Resource/images/title_background.png");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
+
+	//SEの読み込み
+	cursor_moveSE = LoadSoundMem("Resource/sounds/cursormove.mp3");
+	cursor_selectSE = LoadSoundMem("Resource/sounds/cursorselect.mp3");
 
 	//エラーチェック
 	if (background_image == -1)
@@ -45,6 +49,7 @@ eSceneType TitleScene::Update()
 		{
 			menu_cursor = 0;
 		}
+		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_NORMAL, TRUE);
 	}
 
 	//カーソル上移動
@@ -56,11 +61,13 @@ eSceneType TitleScene::Update()
 		{
 			menu_cursor = 3;
 		}
+		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_NORMAL, TRUE);
 	}
 
 	//カーソル決定（決定した画面に遷移する）
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(cursor_selectSE, DX_PLAYTYPE_NORMAL, FALSE);
 		switch (menu_cursor)
 		{
 		case 0:
@@ -100,6 +107,7 @@ void TitleScene::Finalize()
 	DeleteGraph(chara_image);
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
+	InitSoundMem();
 }
 
 //現在のシーン情報を取得

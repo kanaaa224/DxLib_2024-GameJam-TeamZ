@@ -5,18 +5,18 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
 	}
-	for (int i = 0; i < BUFFER; i++)
-	{
-		text[i] = 0;
-		color_num[i] = 0xffffff;
-	}
+	//for (int i = 0; i < BUFFER; i++)
+	//{
+	//	text[i] = 0;
+	//	color_num[i] = 0xffffff;
+	//}
 }
 
 GameMainScene::~GameMainScene()
@@ -41,6 +41,14 @@ void GameMainScene::Initialize()
 	img_gameclearWindow = LoadGraph("Resource/images/gameclear_window.png");
 	int result = LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 	LoadDivGraph("resource/images/SuperChat.png", 5, 5, 1, 330, 105, image);
+
+	//SEの読み込み
+	comment_breakSE = LoadSoundMem("Resource/sounds/commentbreakSE.mp3");
+	enemy_downSE = LoadSoundMem("Resource/sounds/enemydownSE.mp3");
+	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
+	ChangeVolumeSoundMem(150, comment_breakSE);
+	ChangeVolumeSoundMem(170, enemy_downSE);
+	ChangeVolumeSoundMem(170, player_damageSE);
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -201,23 +209,24 @@ eSceneType GameMainScene::Update()
 			{
 				if (player->HitPlayer(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))  //プレイヤーと敵の当たり判定
 				{
-					if (comment[i]->GetFontColor() == 0x00ffff) {
-						// 回復
-						player->DecreaseHP(2);
-					}
+					//if (comment[i]->GetFontColor() == 0x00ffff) {
+					//	// 回復
+					//	player->DecreaseHP(2);
+					//}
 
 					player->SetActive(false);
 					player->DecreaseHP(-1.0f);
+					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 
 					delete enemy[i];
 					enemy[i]=nullptr;
-					break_count++;
 				}
 			}
 			if (enemy[i] != nullptr)   
 			{
 				if (player->HitBullet(enemy[i]->GetLocation(), enemy[i]->GetBoxSize()))    //弾と敵の当たり判定
 				{
+					PlaySoundMem(enemy_downSE, DX_PLAYTYPE_BACK, TRUE);
 					delete enemy[i];
 					enemy[i] = nullptr;
 					break_count++;
@@ -263,7 +272,7 @@ eSceneType GameMainScene::Update()
 						// 回復
 						player->DecreaseHP(2);
 					}
-
+					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 					player->SetActive(false);
 					player->DecreaseHP(-1.0f);
 					comment[i]->Fialize();
@@ -283,7 +292,7 @@ eSceneType GameMainScene::Update()
 						// 回復
 						player->DecreaseHP(2);
 					}
-
+					PlaySoundMem(comment_breakSE, DX_PLAYTYPE_BACK, TRUE);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
@@ -542,6 +551,7 @@ void GameMainScene::Finalize()
 	delete[] commentDatas;
 	commentDatas = nullptr;
 
+	InitSoundMem();
 }
 
 //現在のシーン情報を取得
