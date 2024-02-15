@@ -94,7 +94,7 @@ void TitleScene::Draw() const
 	DrawGraph(745, 240, menu_image, TRUE);
 
 	//カーソル画像の描画
-	DrawTriangle(720, 265 + menu_cursor * 40, 720, 245 + menu_cursor * 40, 740, 255 + menu_cursor * 40, 0xFFFFFF, FALSE);
+	DrawTriangle(720 + menu_cursor * 20, 265 + menu_cursor * 40, 720 + menu_cursor * 20, 245 + menu_cursor * 40, 740 + menu_cursor * 20, 255 + menu_cursor * 40, 0xFFFFFF, FALSE);
 }
 
 //終了時処理
