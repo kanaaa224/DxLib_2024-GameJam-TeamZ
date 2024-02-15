@@ -7,6 +7,7 @@
 #include"HelpScene.h"
 #include"RankingDispScene.h"
 #include"RankingInputScene.h"
+#include"EndScene.h"
 
 SceneManager::SceneManager() : current_scene(nullptr)
 {
@@ -76,7 +77,7 @@ void SceneManager::Update()
 			Draw();
 
 			//エンドが選択されていたら、ゲームを終了する
-			if (next == eSceneType::E_END)
+			if (next == eSceneType::END)
 			{
 				break;
 			}
@@ -168,6 +169,8 @@ SceneBase* SceneManager::CreateScene(eSceneType scene_type)
 		return new RankingInputScene;
 	case eSceneType::E_RESULT:
 		return new ResultScene;
+	case eSceneType::E_END:
+		return new EndScene;
 	default:
 		return nullptr;
 	}
