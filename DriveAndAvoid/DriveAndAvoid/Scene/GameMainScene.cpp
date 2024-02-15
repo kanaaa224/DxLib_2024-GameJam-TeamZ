@@ -5,12 +5,13 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
+
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0),random_num(0),comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
+		save_superchat[i] = NULL;
 	}
 	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
@@ -47,6 +48,8 @@ void GameMainScene::Initialize()
 	enemy_downSE = LoadSoundMem("Resource/sounds/enemydownSE.mp3");
 	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
 	changescene_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
+
+	//SEの音量変更
 	ChangeVolumeSoundMem(150, comment_breakSE);
 	ChangeVolumeSoundMem(170, enemy_downSE);
 	ChangeVolumeSoundMem(170, player_damageSE);
@@ -345,7 +348,9 @@ eSceneType GameMainScene::Update()
 		}*/
 		if (break_count >= 1)
 		{
-			superchat[superchat_count] = new SuperChat(image[GetRand(4)]);
+			random_num = GetRand(4);
+			save_superchat[random_num]++;
+			superchat[superchat_count] = new SuperChat(image[random_num]);
 			superchat_count++;
 			player->IncreaseSpeed(1.0f);
 			break_count = 0;
@@ -422,7 +427,7 @@ void GameMainScene::Draw() const
 			DrawBoxAA(HPbar.x + (2 + i * 2), HPbar.y - 28, HPbar.x + (4 + i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
 		}
 	}
-	DrawGraph(0, 0, gamemainscene_image, TRUE);
+	DrawExtendGraph(0, 0, 1280, 720, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	//SetFontSize(15);
 	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
@@ -501,10 +506,7 @@ void GameMainScene::Finalize()
 {
 	//スコアを計算する
 	int score = (mileage / 10 * 10);
-	for (int i = 0; i < 3; i++)
-	{
-		score += (i + 1) * 50 * enemy_count[i];
-	}
+	
 
 	//リザルトデータの書き込み
 	FILE* fp = nullptr;
@@ -516,14 +518,11 @@ void GameMainScene::Finalize()
 	{
 		throw("Resource/dat/result_data.csvが開けませんでした\n");
 	}
-
-	//スコア保存
-	fprintf(fp, "%d,\n", score);
-
+	
 	//避けた数と得点を保存
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		fprintf(fp, "%d,\n", enemy_count[i]);
+		fprintf(fp, "%d\n", save_superchat[i]);
 	}
 
 	//ファイルクローズ
