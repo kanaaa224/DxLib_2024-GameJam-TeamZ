@@ -19,5 +19,6 @@ void SuperChat::Initialize()
 
 void SuperChat::Draw(int num) const
 {
-	DrawGraph(915, 90 + (num * 120), image, FALSE);
+	DrawRotaGraph(1080, 150 + (num * 120), 0.95f, 0.0f, image, true);
+	//DrawGraph(915, 90 + (num * 120), image, FALSE);
 }
