@@ -12,9 +12,9 @@ private:
 	int color;
 
 public:
-	Comment(const char* comment, int font_size);
+	Comment(const char* comment, float font_size);
 	~Comment() {};
-	void Update();  //更新処理
+	bool Update();  //更新処理(コメントを消去できるか)
 	void Draw()const;  //描画処理
 	int HitBullet();//弾を受けた時の処理
 };

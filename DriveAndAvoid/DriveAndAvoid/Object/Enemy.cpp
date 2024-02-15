@@ -32,7 +32,6 @@ void Enemy::Update(float speed)
 
 void Enemy::Draw() const
 {
-	SetFontSize(font_size);
 	DrawFormatString(location.x, location.y, font_color, comment);
 }
 

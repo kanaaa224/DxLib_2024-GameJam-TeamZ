@@ -101,28 +101,10 @@ void Player::Movement()
 	Vector2D old_location = location;
 	
 	//è\éöà⁄ìÆèàóù
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
-	{
-		location.x -= speed;
-	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
-	{
-		location.x += speed;
-	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
-	{
-		location.y -= speed;
-	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
-	{
-		location.y += speed;
-	}
-
-	//âÊñ äOÇ…çsÇ©Ç»Ç¢ÇÊÇ§Ç…êßå¿Ç∑ÇÈ
-	if ((location.x < size.x) || (location.x >= 1000.0f - 180.0f) || (location.y < size.y) || (location.y >= 550.0f - size.y))
-	{
-		location = old_location;
-	}
+	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))location.x -= speed;
+	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))location.x += speed;
+	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))location.y -= speed;
+	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))location.y += speed;
 }
 
 bool Player::HitBullet(Collider* collider)
