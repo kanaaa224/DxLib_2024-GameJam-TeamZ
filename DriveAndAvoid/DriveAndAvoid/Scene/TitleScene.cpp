@@ -16,6 +16,7 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
+	img_logo = LoadGraph("Resource/images/logo.png");
 	chara_image = LoadGraph("Resource/images/title_chara.png");
 	background_image = LoadGraph("Resource/images/title_background.png");
 	menu_image = LoadGraph("Resource/images/menu.png");
@@ -86,15 +87,28 @@ eSceneType TitleScene::Update()
 //描画処理
 void TitleScene::Draw() const
 {
-	//タイトル画像の描画
+	// 背景
 	DrawGraph(0, 0, background_image, TRUE);
+
+	// 実況者
 	DrawGraph(160, 325, chara_image, TRUE);
 
-	//メニュー画像の描画
+	// メニュー画像の描画
 	DrawGraph(745, 240, menu_image, TRUE);
 
-	//カーソル画像の描画
+	// カーソル画像の描画
 	DrawTriangle(720 + menu_cursor * 20, 265 + menu_cursor * 40, 720 + menu_cursor * 20, 245 + menu_cursor * 40, 740 + menu_cursor * 20, 255 + menu_cursor * 40, 0xFFFFFF, FALSE);
+
+	// ロゴ
+	DrawRotaGraph(320, 200, 0.7f, 0.0f, img_logo, true);
+
+	// サブタイトル
+	SetFontSize(18);
+	DrawFormatString(320 - (GetDrawFormatStringWidth("～スパチャの呪い編～") / 2), 270, 0x000000, "～スパチャの呪い編～");
+
+	// コピーライト
+	SetFontSize(16);
+	DrawFormatString((1280 / 2) - (GetDrawFormatStringWidth("(c) 2024 KBC Winter GameJam TeamZ.") / 2), 700, 0x000000, "(c) 2024 KBC Winter GameJam TeamZ.");
 }
 
 //終了時処理
