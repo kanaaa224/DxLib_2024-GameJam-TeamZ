@@ -42,6 +42,7 @@ void EndScene::Draw() const
 	DrawString(510, 100, "クレジット", 0xffffff);
 	DrawString(305, 300, "お借りした音源　　　魔王魂", 0xffffff);
 	DrawString(265, 400, "お借りしたイラスト　いらすとや", 0xffffff);
+	DrawString(805, 470, "illustAC", 0xffffff);
 }
 
 //終了時処理
