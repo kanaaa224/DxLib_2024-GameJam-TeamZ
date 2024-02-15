@@ -2,7 +2,7 @@
 #include"DxLib.h"
 #include"Object/Player.h"
 
-Bullet::Bullet(Vector2D location) :bullet_size(5), bullet_speed(5),bullet_pos(location),bullet_type(0)
+Bullet::Bullet(Vector2D location) :bullet_size(6), bullet_speed(5),bullet_pos(location),bullet_type(0)
 {
 
 }
@@ -19,7 +19,7 @@ void Bullet::Update()
 
 void Bullet::Draw() const
 {
-	DrawCircle(bullet_pos.x, bullet_pos.y, bullet_size, 0xFFFFFF, TRUE);
+	DrawCircle(bullet_pos.x, bullet_pos.y, bullet_size, 0xFFFF00, TRUE);
 }
 
 bool Bullet::IsFinished()
