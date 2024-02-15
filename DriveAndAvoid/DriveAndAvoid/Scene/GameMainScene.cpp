@@ -47,6 +47,8 @@ void GameMainScene::Initialize()
 	enemy_downSE = LoadSoundMem("Resource/sounds/enemydownSE.mp3");
 	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
 	changescene_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
+
+	//SE‚Ì‰¹—Ê•ÏX
 	ChangeVolumeSoundMem(150, comment_breakSE);
 	ChangeVolumeSoundMem(170, enemy_downSE);
 	ChangeVolumeSoundMem(170, player_damageSE);
@@ -272,7 +274,7 @@ eSceneType GameMainScene::Update()
 					}
 					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 					player->SetActive(false);
-					player->DecreaseHP(-1.0f);
+					player->DecreaseHP(-5.0f);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
