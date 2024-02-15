@@ -425,7 +425,7 @@ void GameMainScene::Draw() const
 			DrawBoxAA(HPbar.x + (2 + i * 2), HPbar.y - 28, HPbar.x + (4 + i * 2), HPbar.y - 22, 0x00ff00, 1.0f, TRUE);
 		}
 	}
-	DrawGraph(0, 0, gamemainscene_image, TRUE);
+	DrawExtendGraph(0, 0, 1280, 720, gamemainscene_image, TRUE);
 	//DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	//SetFontSize(15);
 	//DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
