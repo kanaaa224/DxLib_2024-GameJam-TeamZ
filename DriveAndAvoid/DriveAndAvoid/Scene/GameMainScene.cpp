@@ -217,6 +217,7 @@ eSceneType GameMainScene::Update()
 
 					delete enemy[i];
 					enemy[i]=nullptr;
+					disp_hpbar = 60;
 				}
 			}
 			if (enemy[i] != nullptr)   
@@ -346,7 +347,7 @@ eSceneType GameMainScene::Update()
 		{
 			superchat[superchat_count] = new SuperChat(image[GetRand(4)]);
 			superchat_count++;
-			player->IncreaseSpeed(2.0f);
+			player->IncreaseSpeed(1.0f);
 			break_count = 0;
 		}
 
