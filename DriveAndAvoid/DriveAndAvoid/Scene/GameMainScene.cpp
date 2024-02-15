@@ -484,7 +484,7 @@ void GameMainScene::Draw() const
 
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
-	DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
+	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // デバッグ用 - コメントデータ数
 
 	// ゲームオーバー時のアカウント凍結メッセージ
 	if (isGameover || isGameclear)
