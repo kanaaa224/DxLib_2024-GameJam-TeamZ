@@ -12,11 +12,11 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
 	}
-	//for (int i = 0; i < BUFFER; i++)
-	//{
-	//	text[i] = 0;
-	//	color_num[i] = 0xffffff;
-	//}
+	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
+	{
+		text[i] = 0;
+		color_num[i] = 0xffffff;
+	}*/
 }
 
 GameMainScene::~GameMainScene()
@@ -72,7 +72,7 @@ void GameMainScene::Initialize()
 
 
 	// コメントデータの初期化、読み込み
-	commentDatas = new CommentData[BUFFER];
+	commentDatas = new CommentData[MAX_COMMENT_NUM];
 	
 	FILE* file;
 	errno_t file_result = fopen_s(&file, "Resource/dat/comment.csv", "r");
@@ -98,24 +98,15 @@ void GameMainScene::Initialize()
 		commentDatas[commentDatas_num] = commentData;
 	}
 	
-	
 	int buffer = commentDatas_num;
 
-	//for (int i = 0; i < BUFFER - buffer; i++) {
-	//	commentDatas_num++;
-	// commentDatas = 0 ~ 9 データ有り
-	// commentDatas_num　＝ 10
-	//	commentDatas[commentDatas_num] = commentDatas[GetRand(commentDatas_num)];
-	// commentDatas[10] = commentDatas[0 ～ 10];
-	// commentDatas[10] = commentDatas[10];
-	//}
-
-	for (int i = commentDatas_num + 1; i < BUFFER; i++) {
+	for (int i = commentDatas_num + 1; i < MAX_COMMENT_NUM; i++) {
 		commentDatas[i] = commentDatas[GetRand(commentDatas_num)];
 		commentDatas_num++;
 	}
 	
 	fclose(file);
+
 	
 	// コメントの初期化
 	comment = new Comment * [commentDatas_num];
@@ -124,6 +115,7 @@ void GameMainScene::Initialize()
 	{
 		comment[i] = nullptr;
 	}
+
 
 	//エネミーの初期化
 	enemy = new Enemy * [10];
@@ -316,7 +308,7 @@ eSceneType GameMainScene::Update()
 		//		{
 		//			k++;
 		//		}
-		//		if (k < BUFFER) text[i] = commentDatas[k].comment.c_str();
+		//		if (k < MAX_COMMENT_NUM) text[i] = commentDatas[k].comment.c_str();
 		//	}
 		//}
 
@@ -352,6 +344,29 @@ eSceneType GameMainScene::Update()
 			player->IncreaseSpeed(2.0f);
 			break_count = 0;
 		}
+
+		switch (superchat_count) {
+		case 0:
+			commentDatas_num = 5;
+			break;
+
+		case 1:
+			commentDatas_num = 10;
+			break;
+
+		case 2:
+			commentDatas_num = 20;
+			break;
+
+		case 3:
+			commentDatas_num = 100;
+			break;
+
+		case 4:
+			commentDatas_num = MAX_COMMENT_NUM - 1;
+			break;
+		}
+
 		if (superchat_count >= 5)
 		{
 			isGameclear = true;
@@ -458,7 +473,7 @@ void GameMainScene::Draw() const
 
 	//DrawBoxAA(fx, fy+ 20.0, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
 
-	//DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
+	DrawFormatString(0, 0, 0x000000, "%d", commentDatas_num); // コメントデータ数
 
 	// ゲームオーバー時のアカウント凍結メッセージ
 	if (isGameover || isGameclear)
@@ -524,8 +539,8 @@ void GameMainScene::Finalize()
 
 	delete[] enemy;
 
-	// コメント（敵）の削除
 
+	// コメント（敵）の削除
 	for (int i = 0; i < commentDatas_num; i++)
 	{
 		if (comment[i] != nullptr)
@@ -537,6 +552,9 @@ void GameMainScene::Finalize()
 	}
 
 	delete[] comment;
+	delete[] commentDatas;
+	commentDatas = nullptr;
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -547,9 +565,6 @@ void GameMainScene::Finalize()
 	{
 		delete superchat[i];
 	}
-
-	delete[] commentDatas;
-	commentDatas = nullptr;
 
 	InitSoundMem();
 }

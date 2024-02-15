@@ -6,7 +6,7 @@
 #include"../Object/Comment.h"
 #include"../Object/SuperChat.h"
 
-#define BUFFER 2000
+#define MAX_COMMENT_NUM 2000 // コメント最大数
 
 class GameMainScene :public SceneBase
 {
@@ -27,15 +27,15 @@ private:
 	//int comment_count;	//生成したコメント数
 	int break_count;  //撃破した敵をカウントする
 	int superchat_count;  //スパチャをカウントする
-	//const char *text[BUFFER];	コメント表示
-	//unsigned int color_num[BUFFER];
+	//const char *text[MAX_COMMENT_NUM];	//コメント表示
+	//unsigned int color_num[MAX_COMMENT_NUM];
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
 	int image[5];
 	Comment** comment;         // コメント（敵）
 	CommentData* commentDatas; // コメントのデータ（csvファイルからロード）
 	Enemy** enemy;//敵キャラ
-	int commentDatas_num;      // コメントのデータの数
+	int commentDatas_num;      // 登場させるコメント数
 
 	bool isGameover;  // ゲームオーバーの状態
 	bool isGameclear; // ゲームクリアの状態
