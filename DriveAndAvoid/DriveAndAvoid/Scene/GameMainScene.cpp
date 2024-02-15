@@ -3,7 +3,9 @@
 #include"DxLib.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), mileage(0), player(nullptr)
+#define MAX_ENEMY_NUM 20
+
+GameMainScene::GameMainScene() : back_ground_image(NULL), player(nullptr), enemy(nullptr), mileage(0)
 {
 }
 
@@ -15,15 +17,18 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
-	//高得点値を読み込む
-	ReadHighScore();
-
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/images/background.png");
-	gamemainscene_image = LoadGraph("Resource/images/GameMainScene Image.png");
-	LoadGraph("Resource/images/barrier.png");
+	back_ground_image = LoadGraph("Resource/images/background.png");
+	LoadDivGraph("Resource/images/enemy.png", 3, 3, 1, 300, 350, enemy_image);
 
 	player = new Player();
+
+	enemy = new Enemy * [MAX_ENEMY_NUM];
+
+	for (int i = 0; i < MAX_ENEMY_NUM; i++)
+	{
+		enemy[i] = nullptr;
+	}
 }
 
 //更新処理
@@ -32,11 +37,31 @@ eSceneType GameMainScene::Update()
 	//プレイヤーの更新
 	player->Update();
 
-	//移動距離の更新
-	mileage++;
+	//エネミーの更新
+	bool can_spawn = false;//新しいエネミーが生成可能か
+	if (GetRand(100) == 0)can_spawn = true;
 
-	//コメント管理（神里が追加しました）
+	for (int i = 0; i < MAX_ENEMY_NUM; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			if (enemy[i]->Update())
+			{
+				delete enemy[i];
+				enemy[i] = nullptr;
+			}
+		}
+		else if (can_spawn)
+		{
+			enemy[i] = new Enemy(enemy_image[GetRand(2)]);
+			can_spawn = false;
+		}
+	}
+
+	//コメント
 	comment_manager.Update(player);
+
+	mileage++;
 
 	return GetNowScene();
 }
@@ -45,11 +70,20 @@ eSceneType GameMainScene::Update()
 void GameMainScene::Draw() const
 {
 	//背景画像の描画
-	DrawGraph(-mileage % 1280, 0, back_ground, TRUE);
-	DrawGraph(-mileage % 1280 + 1280, 0, back_ground, TRUE);
+	DrawGraph(-mileage % 1280, 0, back_ground_image, TRUE);
+	DrawGraph(-mileage % 1280 + 1280, 0, back_ground_image, TRUE);
 
 	//プレイヤーの描画
 	player->Draw();
+
+	//エネミーの描画
+	for (int i = 0; i < MAX_ENEMY_NUM; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Draw();
+		}
+	}
 
 	//コメント描画（神里が追加しました）
 	comment_manager.Draw();
@@ -59,43 +93,23 @@ void GameMainScene::Draw() const
 //終了時処理
 void GameMainScene::Finalize()
 {
-	//スコアを計算する
-	int score = (mileage / 10 * 10);
-	
-	//リザルトデータの書き込み
-	FILE* fp = nullptr;
-	//ファイルオープン
-	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
-
-	//エラーチェック
-	if (result != 0)
-	{
-		throw("Resource/dat/result_data.csvが開けませんでした\n");
-	}
-
-	//スコア保存
-	fprintf(fp, "%d,\n", score);
-
-	//ファイルクローズ
-	fclose(fp);
-
 	//動的確保したオブジェクトを削除する
 	delete player;
+
+	for (int i = 0; i < MAX_ENEMY_NUM; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			delete enemy[i];
+			enemy[i] = nullptr;
+		}
+	}
+
+	delete[] enemy;
 }
 
 //現在のシーン情報を取得
 eSceneType GameMainScene::GetNowScene() const
 {
 	return eSceneType::E_MAIN;
-}
-
-//ハイスコアの読み込み
-void GameMainScene::ReadHighScore()
-{
-	RankingData data;
-	data.Initialize();
-
-	high_score = data.GetScore(0);
-
-	data.Finalize();
 }

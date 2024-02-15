@@ -1,28 +1,18 @@
 ﻿#pragma once
 
-#include "../Utility/Vector2D.h"
+#include "Collider.h"
 
-class Enemy
+class Enemy : public Collider
 {
 private:
-	int type;            // タイプ
-	int font_size;       // コメントのフォントサイズ
-	int font_color;      // コメントのフォントカラー
-	const char* comment; // コメント
 	float speed;         // 移動速度
-	Vector2D location;   // 位置情報
-	Vector2D box_size;   // 当たり判定の大きさ
+	int image_handle;
+	float angle;
 
 public:
-	Enemy(int type, int font_size, int font_color, const char* string); // typeが0は移動無し
+	Enemy(int image_handle); // typeが0は移動無し
 	~Enemy();
 
-	void Initialize();        // 初期化処理
-	void Update(float spped); // 更新処理
+	bool Update(); // 更新処理
 	void Draw() const;        // 描画処理
-	void Fialize();           // 終了時処理
-
-	int GetType() const;          // タイプ取得
-	Vector2D GetLocation() const; // 位置情報の取得
-	Vector2D GetBoxSize() const;  // 当たり判定の大きさを取得
 };

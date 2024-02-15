@@ -1,58 +1,28 @@
 ﻿#include "Enemy.h"
 #include "DxLib.h"
 
-Enemy::Enemy(int type, int font_size, int font_color, const char* string) : type(type), font_size(font_size), font_color(font_color), comment(string), speed(0.0f), location(0.0f), box_size(0.0f)
+#define PI 3.14159	// 円周率
+
+Enemy::Enemy(int image_handle) : Collider(Vector2D(1300.0f, 0.0f), Vector2D(77.0f, 77.0f)), speed(5.0f), image_handle(image_handle), angle(0.0f)
 {
-	
+	location.y = GetRand(700);
 }
 
 Enemy::~Enemy()
 {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Enemy::Initialize()
+
+bool Enemy::Update()
 {
-	// 速さの設定
-	speed = (float)(this->type * 2);
-
-	// 生成位置の設定
-	location = Vector2D(700.0f, ((float)(GetRand(4) * 105 + 40)));
-
-	// 当たり判定の大きさ設定
-	box_size = Vector2D(31.0f, 60.0f);
-}
-
-void Enemy::Update(float speed)
-{
-	location -= Vector2D(this->speed + speed, 0.0f); // 位置情報に移動量を加算
+	location.x -= speed; // 位置情報に移動量を加算
+	if ((angle -= 5.0f) < -360.0f)angle = 0.0f;
+	return(location.x < -100);
 }
 
 void Enemy::Draw() const
 {
-	DrawFormatString(location.x, location.y, font_color, comment);
-}
-
-void Enemy::Fialize()
-{
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-int Enemy::GetType() const
-{
-	return type;
-}
-
-Vector2D Enemy::GetLocation() const
-{
-	return location;
-}
-
-Vector2D Enemy::GetBoxSize() const
-{
-	return box_size;
+	DrawRotaGraph(location.x + (size.x / 2), location.y + (size.y), 0.3, PI / 180 * angle, image_handle, TRUE);
 }

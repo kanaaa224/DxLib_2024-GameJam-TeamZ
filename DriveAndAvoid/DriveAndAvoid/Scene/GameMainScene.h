@@ -3,15 +3,17 @@
 #include"SceneBase.h"
 #include"../Object/Player.h"
 #include"../Object/CommentManager.h"
+#include"../Object/Enemy.h"
 
 class GameMainScene :public SceneBase
 {
 private:
-	int high_score;  //ハイスコア
-	int back_ground;  //背景画像
-	int gamemainscene_image; //ゲームシーン画像
-	int mileage;   //走行距離
+	int back_ground_image;  //背景画像
+	int enemy_image[3];//敵画像
+	
+	int mileage;//走行距離
 	Player* player;  //プレイヤー
+	Enemy** enemy;  //敵
 	CommentManager comment_manager;//コメント管理(神里が追加しました)
 
 public:
@@ -24,8 +26,4 @@ public:
 	virtual void Finalize() override;
 
 	virtual eSceneType GetNowScene() const override;
-
-private:
-	//ハイスコア読み込み処理
-	void ReadHighScore();
 };

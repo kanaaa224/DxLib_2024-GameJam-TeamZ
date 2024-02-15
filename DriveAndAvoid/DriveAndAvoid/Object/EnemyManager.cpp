@@ -1,43 +1,17 @@
-#include "CommentManager.h"
+#include "EnemyManager.h"
 #include "DxLib.h"
-#include<math.h>
 
-#define NORMAL_FONT_SIZE 30
-#define BIG_FONT_SIZE 45
-
-#define MAX_COMMENT_NUM 50//コメントの最大表示数
+#define MAX_ENEMY_NUM 50//敵の最大表示数
 
 
-CommentManager::CommentManager()
+EnemyManager::EnemyManager()
 {
-	normal_comment = new Comment * [MAX_COMMENT_NUM];
-	big_comment = new Comment * [MAX_COMMENT_NUM];
+	enemy = new Enemy * [MAX_ENEMY_NUM];
 
-	for (int i = 0; i < MAX_COMMENT_NUM; i++)
+	for (int i = 0; i < MAX_ENEMY_NUM; i++)
 	{
-		normal_comment[i] = nullptr;
-		big_comment[i] = nullptr;
+		enemy[i] = nullptr;
 	}
-
-	//ランキングデータの読み込み
-	FILE* fp = nullptr;
-
-	//ファイルオープン
-	errno_t result = fopen_s(&fp, "Resource/dat/comment.csv", "r");
-
-	if (result != 0)
-	{
-		throw("Resource/dat/comment.csvが読み込めません\n");
-	}
-
-	//対象ファイルから読み込む
-	for (int i = 0; i < COMMENT_TYPE; i++)
-	{
-		fscanf_s(fp, "%50s", comments[i], 50);
-	}
-
-	//ファイルクローズ
-	fclose(fp);
 }
 
 CommentManager::~CommentManager()
@@ -139,7 +113,7 @@ void CommentManager::CommentGenerate()
 			{
 				normal_comment[i] = new Comment(comments[GetRand(COMMENT_TYPE - 1)], (float)NORMAL_FONT_SIZE);//コメントの生成
 				if (HitNormalComment(normal_comment[i], true))
-				break;
+					break;
 			}
 		}
 	}
