@@ -5,7 +5,7 @@
 
 EndScene::EndScene() : count(0), back_ground_image(NULL)
 {
-	
+	SetFontSize(50);
 }
 
 EndScene::~EndScene()
@@ -35,8 +35,13 @@ eSceneType EndScene::Update()
 //描画処理
 void EndScene::Draw() const
 {
+	SetDrawBright(128, 128, 128);
 	DrawGraph(0, 0, back_ground_image, FALSE);
-	DrawFormatString(0, 0, 0xffffff, "%d", count);
+	
+	SetDrawBright(255, 255, 255);
+	DrawString(510, 100, "クレジット", 0xffffff);
+	DrawString(305, 300, "お借りした音源　　　魔王魂", 0xffffff);
+	DrawString(265, 400, "お借りしたイラスト　いらすとや", 0xffffff);
 }
 
 //終了時処理

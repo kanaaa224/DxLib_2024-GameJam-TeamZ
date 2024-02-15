@@ -24,7 +24,7 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	DrawRotaGraph(location.x + (box_size.x / 2), location.y + (box_size.y / 2), 0.2, PI / 180 * angle, image_handle, true);
-	DrawBox(location.x, location.y, location.x + box_size.x, location.y + box_size.y, 0xffffff, false);
+	//DrawBox(location.x, location.y, location.x + box_size.x, location.y + box_size.y, 0xffffff, false);
 }
 
 Vector2D Enemy::GetLocation() const
