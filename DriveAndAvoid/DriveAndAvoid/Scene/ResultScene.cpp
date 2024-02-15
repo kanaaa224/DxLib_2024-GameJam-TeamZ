@@ -10,6 +10,7 @@ ResultScene::ResultScene() :back_ground(NULL), main_image(NULL),titleback_SE(NUL
 		image[i] = NULL;
 		save_superchat[i]= NULL;
 	}
+	SetFontSize(30);
 }
 
 ResultScene::~ResultScene()
@@ -63,15 +64,15 @@ eSceneType ResultScene::Update()
 void ResultScene::Draw() const
 {
 	//”wŒi‰æ‘œ‚ð•`‰æ
-	DrawRotaGraph(0, 0,2.0f,0.0, back_ground, TRUE);
+	DrawRotaGraph(0, 0,3.0f,0.0, back_ground, TRUE);
 	//DrawGraph(0, 0, main_image, TRUE);
 
 	for (int i = 0; i < 5; i++)
 	{
-		DrawRotaGraph(230, 100 + (i * 120), 1.0f, 0.0, image[i], TRUE);
-		DrawFormatString(260,100+ (i * 120), GetColor(255, 255, 255), "x %4d", save_superchat[i]);
+		DrawRotaGraph(530, 100 + (i * 120), 1.0f, 0.0, image[i], TRUE);
+		DrawFormatString(760,70+ (i * 120), GetColor(255, 255, 255), "x %4d", save_superchat[i]);
 	}
-	
+	DrawString(340, 650, "---- Bƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Äƒ^ƒCƒgƒ‹‚Ö–ß‚é ----", 0xffffff, 0);
 }
 
 //I—¹Žžˆ—

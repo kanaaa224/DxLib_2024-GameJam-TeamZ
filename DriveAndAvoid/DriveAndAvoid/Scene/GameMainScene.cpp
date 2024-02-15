@@ -518,7 +518,6 @@ void GameMainScene::Finalize()
 	{
 		throw("Resource/dat/result_data.csv‚ªŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½\n");
 	}
-
 	
 	//”ğ‚¯‚½”‚Æ“¾“_‚ğ•Û‘¶
 	for (int i = 0; i < 5; i++)
