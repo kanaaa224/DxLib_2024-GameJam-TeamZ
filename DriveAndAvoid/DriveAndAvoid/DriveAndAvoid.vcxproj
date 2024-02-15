@@ -146,6 +146,7 @@
     <ClCompile Include="Object\Enemy.cpp" />
     <ClCompile Include="Object\Player.cpp" />
     <ClCompile Include="Object\RankingData.cpp" />
+    <ClCompile Include="Scene\EndScene.cpp" />
     <ClCompile Include="Scene\GameMainScene.cpp" />
     <ClCompile Include="Scene\HelpScene.cpp" />
     <ClCompile Include="Scene\RankingDispScene.cpp" />
@@ -155,6 +156,9 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="SuperChat.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene\EndScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
