@@ -5,12 +5,13 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
+
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0),random_num(0),comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
+		save_superchat[i] = NULL;
 	}
 	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
 	{
@@ -347,7 +348,9 @@ eSceneType GameMainScene::Update()
 		}*/
 		if (break_count >= 1)
 		{
-			superchat[superchat_count] = new SuperChat(image[GetRand(4)]);
+			random_num = GetRand(4);
+			save_superchat[random_num]++;
+			superchat[superchat_count] = new SuperChat(image[random_num]);
 			superchat_count++;
 			player->IncreaseSpeed(1.0f);
 			break_count = 0;
@@ -503,10 +506,7 @@ void GameMainScene::Finalize()
 {
 	//スコアを計算する
 	int score = (mileage / 10 * 10);
-	for (int i = 0; i < 3; i++)
-	{
-		score += (i + 1) * 50 * enemy_count[i];
-	}
+	
 
 	//リザルトデータの書き込み
 	FILE* fp = nullptr;
@@ -519,13 +519,11 @@ void GameMainScene::Finalize()
 		throw("Resource/dat/result_data.csvが開けませんでした\n");
 	}
 
-	//スコア保存
-	fprintf(fp, "%d,\n", score);
-
+	
 	//避けた数と得点を保存
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		fprintf(fp, "%d,\n", enemy_count[i]);
+		fprintf(fp, "%d\n", save_superchat[i]);
 	}
 
 	//ファイルクローズ

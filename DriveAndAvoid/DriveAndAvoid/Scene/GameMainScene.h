@@ -28,8 +28,10 @@ private:
 	//int comment_count;	//生成したコメント数
 	int break_count;  //撃破した敵をカウントする
 	int superchat_count;  //スパチャをカウントする
-	//const char *text[MAX_COMMENT_NUM];	//コメント表示
-	//unsigned int color_num[MAX_COMMENT_NUM];
+	int save_superchat[5];  //生成したスパチャを保存する
+	int random_num;  //ランダムに生成した数字を入れる
+	//const char *text[BUFFER];	//コメント表示
+	//unsigned int color_num[BUFFER];
 	int disp_hpbar;	//HPバーの表示
 	Player* player;  //プレイヤー
 	int image[5];
