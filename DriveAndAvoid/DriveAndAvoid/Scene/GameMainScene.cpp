@@ -275,7 +275,7 @@ eSceneType GameMainScene::Update()
 					}
 					PlaySoundMem(player_damageSE, DX_PLAYTYPE_BACK, TRUE);
 					player->SetActive(false);
-					player->DecreaseHP(-5.0f);
+					player->DecreaseHP(-1.0f);
 					comment[i]->Fialize();
 					delete comment[i];
 					comment[i] = nullptr;
