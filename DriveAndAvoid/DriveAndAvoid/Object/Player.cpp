@@ -302,7 +302,7 @@ void Player::Movement()
 bool Player::HitBullet(Vector2D location, Vector2D size)
 {
 	bool is_hit = false;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 60; i++)
 	{
 		if (bullet[i] != nullptr)
 		{
