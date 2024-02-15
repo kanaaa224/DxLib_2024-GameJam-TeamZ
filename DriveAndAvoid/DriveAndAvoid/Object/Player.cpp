@@ -177,6 +177,8 @@ void Player::Finalize()
 {
 	//“Ç‚İ‚ñ‚¾‰æ‘œ‚Ìíœ
 	DeleteGraph(image);
+
+	//“Ç‚İ‚ñ‚¾SE‚Ìíœ
 	InitSoundMem();
 
 	for (int i = 0; i < 20; i++)

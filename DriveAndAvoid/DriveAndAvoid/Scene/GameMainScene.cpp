@@ -5,7 +5,7 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL)
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -46,6 +46,7 @@ void GameMainScene::Initialize()
 	comment_breakSE = LoadSoundMem("Resource/sounds/commentbreakSE.mp3");
 	enemy_downSE = LoadSoundMem("Resource/sounds/enemydownSE.mp3");
 	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
+	changescene_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
 	ChangeVolumeSoundMem(150, comment_breakSE);
 	ChangeVolumeSoundMem(170, enemy_downSE);
 	ChangeVolumeSoundMem(170, player_damageSE);
@@ -153,7 +154,11 @@ eSceneType GameMainScene::Update()
 
 	if (isGameover || isGameclear && input_delay > 120)
 	{
-		if (InputControl::GetButtonDown(XINPUT_BUTTON_B)) return eSceneType::E_RESULT; // E_RESULT
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
+		{
+			PlaySoundMem(changescene_SE, DX_PLAYTYPE_NORMAL, TRUE);
+			return eSceneType::E_RESULT; // E_RESULT
+		}
 	}
 	else
 	{
@@ -551,6 +556,7 @@ void GameMainScene::Finalize()
 	delete[] commentDatas;
 	commentDatas = nullptr;
 
+	//ì«Ç›çûÇÒÇæSEÇÃçÌèú
 	InitSoundMem();
 }
 

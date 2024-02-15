@@ -3,7 +3,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-ResultScene::ResultScene() :back_ground(NULL), score(0), image(NULL)
+ResultScene::ResultScene() :back_ground(NULL), score(0), image(NULL), titleback_SE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -24,6 +24,9 @@ void ResultScene::Initialize()
 	back_ground = LoadGraph("Resource/images/background.png");
 	image = LoadGraph("Resource/images/GameMainScene Image.png");
 	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120, enemy_image);
+
+	//SEの読み込み
+	titleback_SE = LoadSoundMem("Resource/sounds/back.mp3");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -49,6 +52,7 @@ eSceneType ResultScene::Update()
 	//Bボタンでランキングに遷移する
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(titleback_SE, DX_PLAYTYPE_BACK, TRUE);
 		return eSceneType::E_TITLE;
 	}
 

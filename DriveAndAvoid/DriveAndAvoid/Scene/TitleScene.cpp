@@ -49,7 +49,7 @@ eSceneType TitleScene::Update()
 		{
 			menu_cursor = 0;
 		}
-		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_NORMAL, TRUE);
+		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_BACK, TRUE);
 	}
 
 	//カーソル上移動
@@ -61,13 +61,13 @@ eSceneType TitleScene::Update()
 		{
 			menu_cursor = 3;
 		}
-		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_NORMAL, TRUE);
+		PlaySoundMem(cursor_moveSE, DX_PLAYTYPE_BACK, TRUE);
 	}
 
 	//カーソル決定（決定した画面に遷移する）
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
-		PlaySoundMem(cursor_selectSE, DX_PLAYTYPE_NORMAL, FALSE);
+		PlaySoundMem(cursor_selectSE, DX_PLAYTYPE_NORMAL, TRUE);
 		switch (menu_cursor)
 		{
 		case 0:
@@ -107,6 +107,8 @@ void TitleScene::Finalize()
 	DeleteGraph(chara_image);
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
+
+	//読み込んだSEの削除
 	InitSoundMem();
 }
 

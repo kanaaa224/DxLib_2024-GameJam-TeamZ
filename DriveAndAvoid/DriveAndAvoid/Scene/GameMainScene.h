@@ -19,6 +19,7 @@ private:
 	int comment_breakSE;	//コメント破壊時のSE
 	int enemy_downSE;	//敵撃破時のSE
 	int player_damageSE;	//ダメージ時のSE
+	int changescene_SE;		//シーン移動時のSE
  	int input_delay; //入力遅延
 	int high_score;  //ハイスコア
 	int mileage;   //走行距離
