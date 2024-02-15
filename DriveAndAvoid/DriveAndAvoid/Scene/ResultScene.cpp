@@ -3,7 +3,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-ResultScene::ResultScene() :back_ground(NULL), score(0), main_image(NULL),titleback_SE(NULL)
+ResultScene::ResultScene() :back_ground(NULL), main_image(NULL),titleback_SE(NULL)
 {
 	for (int i = 0; i < 5; i++)
 	{

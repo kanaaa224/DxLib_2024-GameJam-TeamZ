@@ -5,8 +5,8 @@
 #include<math.h>
 
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),/* comment_count(0)*/ isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0), comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0), comment_count(0), isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0),random_num(0)
+
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_image(NULL), barrier_image(NULL), mileage(0), player(nullptr), comment(nullptr), commentDatas(nullptr), commentDatas_num(0),isGameover(false), isGameclear(false), disp_hpbar(0),enemy(nullptr), break_count(0),input_delay(0),superchat(nullptr),superchat_count(0),random_num(0),comment_breakSE(NULL), enemy_downSE(NULL), player_damageSE(NULL), changescene_SE(NULL)
 {
 	for (int i = 0; i < 3; i++)
 	{
