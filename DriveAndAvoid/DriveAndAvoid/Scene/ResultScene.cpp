@@ -27,7 +27,7 @@ void ResultScene::Initialize()
 	int result = LoadDivGraph("resource/images/SuperChat.png", 5, 5, 1, 330, 105, image);
 
 	//SEの読み込み
-	titleback_SE = LoadSoundMem("Resource/sounds/back.mp3");
+	titleback_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
 
 	//エラーチェック
 	if (back_ground == -1)

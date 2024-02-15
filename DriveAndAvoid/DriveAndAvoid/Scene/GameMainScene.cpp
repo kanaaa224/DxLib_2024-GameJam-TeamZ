@@ -11,6 +11,9 @@ GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), gamemainscene_
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
+	}
+	for (int i = 0; i < 5; i++)
+	{
 		save_superchat[i] = NULL;
 	}
 	/*for (int i = 0; i < MAX_COMMENT_NUM; i++)
@@ -134,6 +137,7 @@ void GameMainScene::Initialize()
 	for (int i = 0; i < 5; i++)
 	{
 		superchat[i] = nullptr;
+		save_superchat[i] = NULL;
 	}
 	
 
@@ -145,7 +149,6 @@ void GameMainScene::Initialize()
 eSceneType GameMainScene::Update()
 {
 	if (player->GetHP() <= 0.0f) isGameover = true; // プレイヤーの体力が0未満ならゲームオーバー
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) superchat_count = 5; // 仮
 
 	if (isGameover || isGameclear && input_delay > 120)
 	{
@@ -166,7 +169,7 @@ eSceneType GameMainScene::Update()
 		//エネミーの処理
 
 		bool can_spawn_enemy = false;
-		if (GetRand(100) == 0)can_spawn_enemy = true;
+		if (GetRand(100) == 0) can_spawn_enemy = true;
 
 		for (int i = 0; i < 10; i++)
 		{
@@ -184,21 +187,6 @@ eSceneType GameMainScene::Update()
 				int type = GetRand(2);
 				enemy[i] = new Enemy(enemy_image[type], type);
 				can_spawn_enemy = false;
-			}
-		}
-
-
-		// コメント（敵）生成処理
-		//if (mileage / 20 % 100 == 0)
-		//{
-		for (int i = 0; i < commentDatas_num; i++)
-		{
-			if (comment[i] == nullptr)
-			{
-				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
-				comment[i]->Initialize();
-				//comment_count++;
-				break;
 			}
 		}
 		
@@ -235,7 +223,18 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		// コメント（敵）の更新と当たり判定チェック
+		// コメント（敵）の生成、更新と当たり判定チェック
+		//if (mileage / 20 % 100 == 0)
+		for (int i = 0; i < commentDatas_num; i++)
+		{
+			if (comment[i] == nullptr)
+			{
+				comment[i] = new Comment(commentDatas[i].type, commentDatas[i].font_size, commentDatas[i].font_color, commentDatas[i].comment);
+				comment[i]->Initialize();
+				//comment_count++;
+				break;
+			}
+		}
 		for (int i = 0; i < commentDatas_num; i++)
 		{
 			if (comment[i] != nullptr) comment[i]->Update(player->GetSpped());
@@ -346,7 +345,7 @@ eSceneType GameMainScene::Update()
 				}
 			}
 		}*/
-		if (break_count >= 1)
+		if (break_count >= 3)
 		{
 			random_num = GetRand(4);
 			save_superchat[random_num]++;
@@ -356,6 +355,7 @@ eSceneType GameMainScene::Update()
 			break_count = 0;
 		}
 
+		// 獲得スパチャ数に応じてコメント数を制御
 		switch (superchat_count) {
 		case 0:
 			commentDatas_num = 5;
