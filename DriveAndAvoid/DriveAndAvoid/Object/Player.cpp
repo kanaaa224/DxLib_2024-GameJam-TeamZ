@@ -5,7 +5,7 @@
 #define BULLET_MAX_NUM 20
 #define NORMAL_SPEED 5.0f
 
-Player::Player() : Collider(Vector2D(100.0f, 100.0f), Vector2D(115.0f, 35.0f)), is_active(true), image(NULL), speed(NORMAL_SPEED), hp(10)
+Player::Player() : Collider(Vector2D(100.0f, 100.0f), Vector2D(70.0f, 25.0f)), is_active(true), image(NULL), speed(NORMAL_SPEED), hp(10)
 {
 	bullet = new Bullet * [BULLET_MAX_NUM];
 
@@ -15,7 +15,7 @@ Player::Player() : Collider(Vector2D(100.0f, 100.0f), Vector2D(115.0f, 35.0f)), 
 	}
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/jet.png");
+	image = LoadGraph("Resource/images/player.png");
 
 	//エラーチェック
 	if (image == -1)
@@ -80,8 +80,8 @@ void Player::Update()
 void Player::Draw()
 {
 	//プレイヤー画像の描画
-	DrawGraph(location.x, location.y, image, TRUE);
-	DrawBox(location.x, location.y, location.x + size.x, location.y + size.y, 0xffffff, FALSE);
+	DrawRotaGraph(location.x + (size.x / 2) + 3, location.y + (size.y / 2) - 7, 1, 0, image, TRUE);
+	DrawBox(location.x, location.y, location.x + size.x, location.y + size.y, 0x000000, FALSE);
 
 	for (int i = 0; i < BULLET_MAX_NUM; i++)
 	{
