@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0), bullet_flg(true), delay(0), bulletSE(NULL)
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), hp(0.0f), fuel(0.0f), bullet_count(0), bullet_flg(true), delay(0), bulletSE(NULL),bullet(nullptr),now_anim(FIRE01),count(0),fire_image01(0),fire_image02(0)
 {
 
 }
@@ -54,7 +54,17 @@ void Player::Initialize()
 	if (fire_image02 == -1)
 	{
 		throw("Resource/images/fire02.pngがありません\n");
-	}}
+	}
+	for (int i = 0; i < 60; i++)
+	{
+		//弾が生成されていたら、描画を行う
+		if (bullet[i] != nullptr)
+		{
+			bullet[i]->Draw();
+		}
+	}
+
+}
 
 //更新処理
 void Player::Update()
