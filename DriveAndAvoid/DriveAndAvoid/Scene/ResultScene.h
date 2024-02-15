@@ -6,10 +6,10 @@ class ResultScene :public SceneBase
 {
 private:
 	int back_ground;  //”wŒi‰æ‘œ
-	int image;	//”wŒi‰æ‘œ
+	int main_image;	//”wŒi‰æ‘œ
 	int score;  //ƒXƒRƒA
-	int enemy_count[3];  //“G‚ÌƒJƒEƒ“ƒg
-	int enemy_image[3];  //“G‰æ‘œ
+	int image[5];  //ƒXƒpƒ`ƒƒ‰æ‘œ
+	int save_superchat[5];  //¶¬‚µ‚½ƒXƒpƒ`ƒƒ‚ğ•Û‘¶‚·‚é
 
 public:
 	ResultScene();
