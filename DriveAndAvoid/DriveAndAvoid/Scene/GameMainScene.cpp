@@ -141,7 +141,7 @@ void GameMainScene::Initialize()
 eSceneType GameMainScene::Update()
 {
 	if (player->GetHP() <= 0.0f) isGameover = true; // プレイヤーの体力が0未満ならゲームオーバー
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) isGameclear = true; // 仮
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_X)) superchat_count = 5; // 仮
 
 	if (isGameover || isGameclear && input_delay > 120)
 	{
@@ -340,6 +340,7 @@ eSceneType GameMainScene::Update()
 		{
 			superchat[superchat_count] = new SuperChat(image[GetRand(4)]);
 			superchat_count++;
+			player->IncreaseSpeed(2.0f);
 			break_count = 0;
 		}
 		if (superchat_count >= 5)

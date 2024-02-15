@@ -45,6 +45,7 @@ public:
 	bool GetActive(); //プレイヤー側のフラグを取得する
 	void SetBulletActive(bool flg); //弾の有効フラグ設定
 	void DecreaseHP(float value);  //体力減少処理
+	void IncreaseSpeed(float value); //	スピード増加処理
 	Vector2D GetLocation() const;  //位置座標取得
 	Vector2D GetBulletLocation();  //位置座標取得
 	Vector2D GetBoxSize() const;  //当たり判定の大きさ取得

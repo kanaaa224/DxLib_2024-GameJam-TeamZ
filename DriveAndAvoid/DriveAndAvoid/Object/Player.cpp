@@ -19,7 +19,7 @@ void Player::Initialize()
 	location = Vector2D(320.0f, 380.0f);
 	box_size = Vector2D(115.0f, 35.0f);
 	angle = 0.0f;
-	speed = 3.0f;
+	speed = 1.0f;
 	hp = 50;
 	fuel = 20000;
 	bullet_count = 0;
@@ -196,6 +196,12 @@ void Player::SetBulletActive(bool flg)
 void Player::DecreaseHP(float value)
 {
 	this->hp += value;
+}
+
+//スピード増加処理
+void Player::IncreaseSpeed(float value)
+{
+	this->speed += value;
 }
 
 //位置情報取得処理
