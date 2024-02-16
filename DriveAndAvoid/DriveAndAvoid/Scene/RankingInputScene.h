@@ -9,6 +9,7 @@ private:
 	int background_image;  //背景画像
 	RankingData* ranking;  //ランキング情報
 	int score;   //スコア
+	int superchats[5];
 	char name[15];  //名前
 	int name_num;   //名前入力数
 	int cursor_x;  //カーソルx座標

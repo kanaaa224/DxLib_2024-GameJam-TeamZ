@@ -53,13 +53,11 @@ void RankingDispScene::Draw() const
 	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(0, 0, background_image, TRUE);
 	DrawRotaGraph(640, 360, 1, 0, ranking_board_image, TRUE);
-	
 
-	
 	//æ“¾‚µ‚½ƒ‰ƒ“ƒLƒ“ƒOƒf[ƒ^‚ğ•`‰æ‚·‚é
 	for (int i = 0; i < 10; i++)
 	{
-		DrawFormatString(500, 184 + i * 49, 0x000000, "%2d %-7s %6d", ranking->GetRank(i), ranking->GetName(i), ranking->GetScore(i));
+		DrawFormatString(500, 184 + i * 49, 0x000000, "%2d %-7s %10d‰~", ranking->GetRank(i), ranking->GetName(i), ranking->GetScore(i));
 	}
 }
 

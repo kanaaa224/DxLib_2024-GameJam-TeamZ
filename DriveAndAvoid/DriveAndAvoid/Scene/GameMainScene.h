@@ -45,6 +45,8 @@ private:
 
 	SuperChat** superchat;  //スーパーチャット
 
+	int bgm; // BGM
+
 public:
 	GameMainScene();
 	virtual ~GameMainScene();

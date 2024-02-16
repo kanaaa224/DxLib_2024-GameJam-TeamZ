@@ -3,13 +3,14 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-ResultScene::ResultScene() :back_ground(NULL), main_image(NULL),titleback_SE(NULL)
+ResultScene::ResultScene() : score(0), back_ground(NULL), main_image(NULL),titleback_SE(NULL)
 {
 	for (int i = 0; i < 5; i++)
 	{
 		image[i] = NULL;
-		save_superchat[i]= NULL;
+		superchats[i]= NULL;
 	}
+
 	SetFontSize(30);
 }
 
@@ -54,7 +55,7 @@ eSceneType ResultScene::Update()
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
 		PlaySoundMem(titleback_SE, DX_PLAYTYPE_BACK, TRUE);
-		return eSceneType::E_TITLE;
+		return eSceneType::E_RANKING_INPUT;
 	}
 
 	return GetNowScene();
@@ -70,7 +71,7 @@ void ResultScene::Draw() const
 	for (int i = 0; i < 5; i++)
 	{
 		DrawRotaGraph(530, 100 + (i * 120), 1.0f, 0.0, image[i], TRUE);
-		DrawFormatString(760,70+ (i * 120), GetColor(255, 255, 255), "x %4d", save_superchat[i]);
+		DrawFormatString(760,70+ (i * 120), GetColor(255, 255, 255), "x %4d", superchats[i]);
 	}
 	DrawString(340, 650, "---- Bボタンを押してタイトルへ戻る ----", 0xffffff, 0);
 }
@@ -108,9 +109,15 @@ void ResultScene::ReadResultData()
 	//避けた数と得点を取得
 	for (int i = 0; i < 5; i++)
 	{
-		fscanf_s(fp, "%d\n", &save_superchat[i]);
+		fscanf_s(fp, "%d\n", &superchats[i]);
 	}
 
 	//ファイルクローズ
 	fclose(fp);
+
+	score += superchats[0] * 100000;
+	score += superchats[1] * 50000;
+	score += superchats[2] * 499;
+	score += superchats[3] * 999;
+	score += superchats[4] * 199;
 }

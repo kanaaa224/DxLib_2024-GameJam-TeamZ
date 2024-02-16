@@ -52,6 +52,10 @@ void GameMainScene::Initialize()
 	player_damageSE = LoadSoundMem("Resource/sounds/Player_damageSE.mp3");
 	changescene_SE = LoadSoundMem("Resource/sounds/backSE.mp3");
 
+	bgm = LoadSoundMem("Resource/sounds/bgm_gamemain.wav");
+	ChangeVolumeSoundMem(150, bgm);
+	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP, TRUE);
+
 	//SEÇÃâπó ïœçX
 	ChangeVolumeSoundMem(150, comment_breakSE);
 	ChangeVolumeSoundMem(170, enemy_downSE);
@@ -570,6 +574,9 @@ void GameMainScene::Finalize()
 	{
 		delete superchat[i];
 	}
+
+	StopSoundMem(bgm);
+	DeleteSoundMem(bgm);
 
 	InitSoundMem();
 }

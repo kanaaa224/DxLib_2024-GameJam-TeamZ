@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-TitleScene::TitleScene() :background_image(NULL), menu_image(NULL), cursor_image(NULL), menu_cursor(0),cursor_moveSE(NULL),cursor_selectSE(NULL)
+TitleScene::TitleScene() :background_image(NULL), menu_image(NULL), cursor_image(NULL), menu_cursor(0), cursor_moveSE(NULL), cursor_selectSE(NULL), bgm(0)
 {
 
 }
@@ -36,6 +36,10 @@ void TitleScene::Initialize()
 	}
 	
 	SetBackgroundColor(255, 255, 255);
+
+	bgm = LoadSoundMem("Resource/sounds/bgm_title.wav");
+	ChangeVolumeSoundMem(150, bgm);
+	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP, TRUE);
 }
 
 //çXêVèàóù
@@ -119,6 +123,9 @@ void TitleScene::Finalize()
 	DeleteGraph(chara_image);
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
+
+	StopSoundMem(bgm);
+	DeleteSoundMem(bgm);
 
 	//ì«Ç›çûÇÒÇæSEÇÃçÌèú
 	InitSoundMem();

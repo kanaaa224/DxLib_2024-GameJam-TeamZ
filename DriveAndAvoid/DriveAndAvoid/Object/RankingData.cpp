@@ -38,7 +38,7 @@ void RankingData::Initialize()
 	//対象ファイルから読み込む
 	for (int i = 0; i < 10; i++)
 	{
-		fscanf_s(fp, "%6d,%2d,%[^,\n],\n", &score[i], &rank[i], &name[i], 7);
+		fscanf_s(fp, "%10d,%2d,%[^,\n],\n", &score[i], &rank[i], &name[i], 7);
 	}
 
 	//ファイルクローズ

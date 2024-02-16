@@ -16,12 +16,12 @@ RankingInputScene::~RankingInputScene()
 void RankingInputScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Ranking.bmp");
+	background_image = LoadGraph("Resource/images/ranking_background.png");
 
 	//エラーチェック
 	if (background_image == -1)
 	{
-		throw("Resource/images/Ranking.bmpがありません\n");
+		throw("Resource/images/ranking_background.pngがありません\n");
 	}
 
 	//メモリの動的確保
@@ -40,10 +40,22 @@ void RankingInputScene::Initialize()
 	}
 
 	//結果を読み込む
-	fscanf_s(fp, "%6d,\n", &score);
-
+	for (int i = 0; i < 5; i++)
+	{
+		fscanf_s(fp, "%d,\n", &superchats[i]);
+		//fscanf_s(fp, "%d\n", &save_superchat[i]);
+	}
+	
 	//ファイルクローズ
 	fclose(fp);
+
+	score += superchats[0] * 100000;
+	score += superchats[1] * 50000;
+	score += superchats[2] * 499;
+	score += superchats[3] * 999;
+	score += superchats[4] * 199;
+
+	SetFontSize(16);
 }
 
 //更新処理
@@ -70,7 +82,7 @@ eSceneType RankingInputScene::Update()
 void RankingInputScene::Draw() const
 {
 	//背景画像の描画
-	DrawGraph(0, 0, background_image, TRUE);
+	DrawExtendGraph(0, 0, 1280, 720, background_image, TRUE);
 
 	//名前入力指示文字列の描画
 	DrawString(150, 100, "ランキングに登録します", 0xFFFFFF);
@@ -108,6 +120,8 @@ void RankingInputScene::Draw() const
 			DrawBox(35 + font_size * 2, 400, 75 + font_size * 2, 400 + font_size, GetColor(255, 255, 255), FALSE);
 		}
 	}
+
+	DrawFormatString(150, 600, 0xffffff, "視聴者から巻き上げたスパチャの合計額: ￥%d", score);
 }
 
 //終了時処理

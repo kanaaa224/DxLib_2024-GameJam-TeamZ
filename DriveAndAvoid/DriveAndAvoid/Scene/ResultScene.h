@@ -9,7 +9,8 @@ private:
 	int main_image;	//背景画像
 	int titleback_SE;	//タイトルに戻るSE
 	int image[5];  //スパチャ画像
-	int save_superchat[5];  //生成したスパチャを保存する
+	int superchats[5];  //生成したスパチャを保存する
+	int score; // スコア（スパチャで稼いだ合計額）
 
 public:
 	ResultScene();
