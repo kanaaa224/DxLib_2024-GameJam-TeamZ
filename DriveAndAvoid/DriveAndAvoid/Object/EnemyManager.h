@@ -3,21 +3,19 @@
 #include"Enemy.h"
 #include"Player.h"
 
+#define ENEMY_TYPE 3
+
 class EnemyManager
 {
 private:
-	char comments[COMMENT_TYPE][50];
-	Comment** normal_comment;//普通のサイズのコメント
-	Comment** big_comment;//大きいサイズのコメント
+	Enemy** enemy;//敵
+	int enemy_image[ENEMY_TYPE];
 
 public:
-	CommentManager();
-	~CommentManager();
+	EnemyManager();
+	~EnemyManager();
 
 	void Update(Player* player); // 更新処理
 	void Draw() const;        // 描画処理
-	void CommentGenerate();
-	bool HitComment(Collider* collider, bool can_delete);
-	bool HitNormalComment(Collider* collider, bool can_delete);
-	bool HitBigComment(Collider* collider, bool can_delete);
+	bool HitEnemy(Collider* collider, bool can_delete);
 };

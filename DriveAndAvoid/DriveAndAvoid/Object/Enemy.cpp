@@ -24,5 +24,6 @@ bool Enemy::Update()
 
 void Enemy::Draw() const
 {
-	DrawRotaGraph(location.x + (size.x / 2), location.y + (size.y), 0.3, PI / 180 * angle, image_handle, TRUE);
+	DrawRotaGraph(location.x + (size.x / 2), location.y + (size.y / 2), 0.3, PI / 180 * angle, image_handle, TRUE);
+	DrawBox(location.x, location.y, location.x + size.x, location.y + size.y, 0xffffff, FALSE);
 }

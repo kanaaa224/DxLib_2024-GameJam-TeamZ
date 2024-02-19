@@ -3,18 +3,17 @@
 #include"SceneBase.h"
 #include"../Object/Player.h"
 #include"../Object/CommentManager.h"
-#include"../Object/Enemy.h"
+#include"../Object/EnemyManager.h"
 
 class GameMainScene :public SceneBase
 {
 private:
 	int back_ground_image;  //”wŒi‰æ‘œ
-	int enemy_image[3];//“G‰æ‘œ
 	
 	int mileage;//‘–s‹——£
 	Player* player;  //ƒvƒŒƒCƒ„[
-	Enemy** enemy;  //“G
-	CommentManager comment_manager;//ƒRƒƒ“ƒgŠÇ—(_—¢‚ª’Ç‰Á‚µ‚Ü‚µ‚½)
+	CommentManager comment_manager;//ƒRƒƒ“ƒgŠÇ—
+	EnemyManager enemy_manager;//“GŠÇ—
 
 public:
 	GameMainScene();

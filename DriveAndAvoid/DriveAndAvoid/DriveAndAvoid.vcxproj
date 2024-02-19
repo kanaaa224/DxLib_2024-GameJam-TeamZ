@@ -145,6 +145,7 @@
     <ClCompile Include="Object\Comment.cpp" />
     <ClCompile Include="Object\CommentManager.cpp" />
     <ClCompile Include="Object\Enemy.cpp" />
+    <ClCompile Include="Object\EnemyManager.cpp" />
     <ClCompile Include="Object\Player.cpp" />
     <ClCompile Include="Object\RankingData.cpp" />
     <ClCompile Include="Scene\GameMainScene.cpp" />
@@ -155,6 +156,9 @@
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Object\EnemyManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
