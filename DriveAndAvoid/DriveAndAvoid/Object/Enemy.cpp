@@ -3,7 +3,7 @@
 
 #define PI 3.14159	// 円周率
 
-Enemy::Enemy(int image_handle) : Collider(Vector2D(1300.0f, 0.0f), Vector2D(77.0f, 77.0f)), speed(5.0f), image_handle(image_handle), angle(0.0f)
+Enemy::Enemy(int image_handle) : Collider(Vector2D(1300.0f, 0.0f), Vector2D(65.0f, 65.0f)), speed(5.0f), image_handle(image_handle), angle(0.0f)
 {
 	location.y = GetRand(700);
 }
